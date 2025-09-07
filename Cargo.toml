@@ -1,8 +1,11 @@
 [workspace]
 resolver = "3"
-members = ["bin/milera-server", "crates/milera-api"]
+members = ["bin/milera-server", "crates/milera-api", "crates/milera-common"]
 
 
 [workspace.dependencies]
 tokio = { version = "1.47.1", features = ["full"] }
-
+sqlx = { version = "0.8.6", features = ["chrono", "postgres", "runtime-tokio", "rust_decimal"] }
+serde = { version = "1.0.219", features = ["derive"] }
+rust_decimal = "1.37.2"
+chrono = { version = "0.4.41", features = ["serde"] }
