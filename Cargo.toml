@@ -1,0 +1,6 @@
+[workspace]
+resolver = "3"
+members = ["bin/milera-server", "crates/milera-api"]
+
+
+[workspace.dependencies]
