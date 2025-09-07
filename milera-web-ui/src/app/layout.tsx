@@ -1,7 +1,8 @@
+import { Toaster } from "@/components/ui/sonner";
+import { info } from "@/data/info";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
 import Providers from "./providers";
 
 const geistSans = Geist({
@@ -15,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Milera",
-    description: "Discussion Application for Nepali users",
+    title: info.name,
+    description: info.tagline,
 };
 
 export default function RootLayout({
