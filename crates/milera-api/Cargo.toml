@@ -4,3 +4,17 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+serde = { workspace = true }
+ehttp = { workspace = true, features = ["json", "multipart"] }
+serde_json = { workspace = true }
+wasm-bindgen-futures = "0.4.51"
+thiserror = { workspace = true }
+
+[target.'cfg(target_family = "wasm")'.dependencies]
+milera-common = { path = "../milera-common", features = ["wasm"] }
+wasm-bindgen = { workspace = true }
+tsify = { workspace = true }
+
+[lib]
+crate-type = ["cdylib", "staticlib", "lib"]
+name = "milera_api"

@@ -12,6 +12,7 @@ use axum::{
     response::{IntoResponse, Response},
     routing::post,
 };
+use milera_common::response::RegistrationResponse;
 use bcrypt::{DEFAULT_COST, hash};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -65,10 +66,10 @@ pub async fn register(
 
     Ok((
         StatusCode::OK,
-        Json(json!({
-            "message": "User created successfully",
-            "access_token": token
-        })),
+        Json(RegistrationResponse {
+            message: "User created successfully".to_string(),
+            access_token: token,
+        }),
     )
         .into_response())
 }

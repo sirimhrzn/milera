@@ -7,8 +7,8 @@ edition = "2024"
 serde = { workspace = true }
 sqlx = { workspace = true, optional = true }
 rust_decimal = { workspace = true }
-wasm-bindgen = { version = "0.2.100", optional = true }
-tsify = { version = "0.5.5", features = ["js"] , optional = true }
+wasm-bindgen = { workspace = true, optional = true }
+tsify = { workspace = true , optional = true}
 chrono = { workspace = true }
 
 

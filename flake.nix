@@ -42,7 +42,7 @@
       };
     in {
       default = pkgs.mkShell {
-        buildInputs = with pkgs; [pkg-config openssl nodejs_22 cargo-ndk wasm-bindgen-cli_0_2_100 android-tools sqlx-cli ] ++ [rust];
+        buildInputs = with pkgs; [pkg-config openssl nodejs_22 cargo-ndk  android-tools sqlx-cli ] ++ [rust];
         shellHook = ''
           export SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk
           # export ANDROID_NDK_HOME=/Users/$USER/Library/Android/sdk/ndk/29.0.13846066

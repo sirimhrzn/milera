@@ -1,6 +1,10 @@
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 
+#[cfg(feature = "wasm")]
+use wasm_bindgen::prelude::*;
+
+
 #[cfg_attr(
     feature = "wasm",
     derive(tsify::Tsify),
