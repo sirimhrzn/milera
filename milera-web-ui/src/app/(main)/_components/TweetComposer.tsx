@@ -106,7 +106,7 @@ export function TweetComposer({
                         placeholder={placeholder}
                         value={tweetText}
                         onChange={(e) => setTweetText(e.target.value)}
-                        className="min-h-[120px] text-xl placeholder:text-muted-foreground border-0 resize-none focus-visible:ring-0 p-0"
+                        className="min-h-[80px] text-xl placeholder:text-muted-foreground border-0 resize-none focus-visible:ring-0 bg-muted"
                         maxLength={maxLength}
                     />
 

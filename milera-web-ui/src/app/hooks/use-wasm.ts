@@ -1,21 +1,34 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import init, {
+    MileraConfig,
+    MileraApi,
+} from "../../../../web-js/milera_api.js";
 
-export default function useWasm() {
-    const [wasm, setWasm] = useState<any>(null);
+export default function useMileraApi(url = "http://localhost:7777") {
+    const [api, setApi] = useState<MileraApi | null>(null);
+    const [error, setError] = useState<unknown>(null);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
-        async function loadWasm() {
+        async function initializeWasm() {
             try {
-                const wasmModule = await import(
-                    "../../../../web-js/milera_api.js"
-                );
-                setWasm(wasmModule);
+                setLoading(true);
+                // Initialize the WebAssembly module
+                await init();
+                const config = new MileraConfig(url);
+                const apiInstance = new MileraApi(config);
+                setApi(apiInstance);
             } catch (err) {
-                console.error("Failed to load WASM:", err);
+                console.error("Failed to initialize WASM:", err);
+                setError(err);
+            } finally {
+                setLoading(false);
             }
         }
-        loadWasm();
+        initializeWasm();
     }, []);
-    return wasm;
+
+    return { api, loading, error };
 }

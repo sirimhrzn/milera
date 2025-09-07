@@ -25,6 +25,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { signUpAction } from "../actions";
+import useMileraApi from "@/app/hooks/use-wasm";
 
 export const signUpSchema = z.object({
     username: z
@@ -51,15 +52,24 @@ export function SignUpForm({
         },
     });
 
+    const { api } = useMileraApi();
+
     const onSubmit = async (data: SignUpFormData) => {
         try {
-            const result = await signUpAction(data.username, data.password);
-            if (result.success) {
-                toast.success("Successfully signed up! Redirecting...");
-                router.push("/login");
-            } else {
-                toast.error("Sign up failed. Please try again.");
+            if (!api) {
+                throw new Error(
+                    "API is not available. Please try again later."
+                );
             }
+            const resData = api.register_user(data.username, data.password);
+            console.log(resData);
+            // const result = await signUpAction(data.username, data.password);
+            // if (result.success) {
+            //     toast.success("Successfully signed up! Redirecting...");
+            //     router.push("/login");
+            // } else {
+            //     toast.error("Sign up failed. Please try again.");
+            // }
         } catch (error) {
             form.setError("root", {
                 message:

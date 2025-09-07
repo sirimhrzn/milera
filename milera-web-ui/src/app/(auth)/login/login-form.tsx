@@ -25,7 +25,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { loginAction } from "../actions";
-import useWasm from "@/app/hooks/use-wasm";
+import useMileraApi from "@/app/hooks/use-wasm";
 
 export const loginSchema = z.object({
     username: z
@@ -52,18 +52,24 @@ export function LoginForm({
         },
     });
 
-    const wasm = useWasm();
-    console.log(wasm);
+    const { api } = useMileraApi();
 
     const onSubmit = async (data: LoginFormData) => {
         try {
-            const result = await loginAction(data.username, data.password);
-            if (result.success) {
-                toast.success("Successfully logged in! Redirecting...");
-                router.push("/");
-            } else {
-                toast.error("Invalid credentials");
+            if (!api) {
+                throw new Error(
+                    "API is not available. Please try again later."
+                );
             }
+            const resData = api.login_user(data.username, data.password);
+            console.log(resData);
+            // const result = await loginAction(data.username, data.password);
+            // if (result.success) {
+            //     toast.success("Successfully logged in! Redirecting...");
+            //     router.push("/");
+            // } else {
+            //     toast.error("Invalid credentials");
+            // }
         } catch (error) {
             form.setError("root", {
                 message:
