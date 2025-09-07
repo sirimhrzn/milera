@@ -10,6 +10,7 @@ import {
     Share,
     Verified,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 interface Tweet {
@@ -46,30 +47,58 @@ export function TweetCard({ tweet }: TweetCardProps) {
         return num.toString();
     };
 
+    const handleTweetClick = (e: React.MouseEvent) => {
+        // Don't navigate if clicking on interactive elements
+        if ((e.target as HTMLElement).closest("button, a")) {
+            return;
+        }
+        window.location.href = `/tweet/${tweet.id}`;
+    };
+
     return (
-        <article className="p-4 hover:bg-muted/50 transition-colors cursor-pointer">
+        <article
+            className="p-4 hover:bg-muted/50 transition-colors cursor-pointer"
+            onClick={handleTweetClick}
+        >
             <div className="flex gap-3">
                 {/* Avatar */}
-                <Avatar className="w-10 h-10 flex-shrink-0">
-                    <AvatarImage
-                        src={tweet.user.avatar || "/placeholder.svg"}
-                    />
-                    <AvatarFallback>{tweet.user.name[0]}</AvatarFallback>
-                </Avatar>
+                <Link
+                    href={`/profile/${tweet.user.username}`}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <Avatar className="w-10 h-10 flex-shrink-0">
+                        <AvatarImage
+                            src={tweet.user.avatar || "/placeholder.svg"}
+                        />
+                        <AvatarFallback>{tweet.user.name[0]}</AvatarFallback>
+                    </Avatar>
+                </Link>
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                     {/* Header */}
                     <div className="flex items-center gap-1 mb-1">
-                        <span className="font-bold text-foreground truncate">
-                            {tweet.user.name}
-                        </span>
+                        <Link
+                            href={`/profile/${tweet.user.username}`}
+                            className="hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <span className="font-bold text-foreground truncate">
+                                {tweet.user.name}
+                            </span>
+                        </Link>
                         {tweet.user.verified && (
                             <Verified className="w-4 h-4 text-primary flex-shrink-0" />
                         )}
-                        <span className="text-muted-foreground truncate">
-                            @{tweet.user.username}
-                        </span>
+                        <Link
+                            href={`/profile/${tweet.user.username}`}
+                            className="hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <span className="text-muted-foreground truncate">
+                                @{tweet.user.username}
+                            </span>
+                        </Link>
                         <span className="text-muted-foreground">·</span>
                         <span className="text-muted-foreground flex-shrink-0">
                             {tweet.timestamp}
@@ -78,6 +107,7 @@ export function TweetCard({ tweet }: TweetCardProps) {
                             variant="ghost"
                             size="sm"
                             className="ml-auto p-1 h-auto"
+                            onClick={(e) => e.stopPropagation()}
                         >
                             <MoreHorizontal className="w-4 h-4" />
                         </Button>
@@ -105,6 +135,7 @@ export function TweetCard({ tweet }: TweetCardProps) {
                             variant="ghost"
                             size="sm"
                             className="flex items-center gap-2 text-muted-foreground hover:text-primary hover:bg-primary/10 p-2 rounded-full"
+                            onClick={(e) => e.stopPropagation()}
                         >
                             <MessageCircle className="w-4 h-4" />
                             <span className="text-sm">
@@ -115,7 +146,10 @@ export function TweetCard({ tweet }: TweetCardProps) {
                         <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => setRetweeted(!retweeted)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setRetweeted(!retweeted);
+                            }}
                             className={`flex items-center gap-2 p-2 rounded-full ${
                                 retweeted
                                     ? "text-green-500 hover:text-green-600 hover:bg-green-500/10"
@@ -133,7 +167,10 @@ export function TweetCard({ tweet }: TweetCardProps) {
                         <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => setLiked(!liked)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setLiked(!liked);
+                            }}
                             className={`flex items-center gap-2 p-2 rounded-full ${
                                 liked
                                     ? "text-red-500 hover:text-red-600 hover:bg-red-500/10"
@@ -154,6 +191,7 @@ export function TweetCard({ tweet }: TweetCardProps) {
                             variant="ghost"
                             size="sm"
                             className="flex items-center gap-2 text-muted-foreground hover:text-primary hover:bg-primary/10 p-2 rounded-full"
+                            onClick={(e) => e.stopPropagation()}
                         >
                             <Share className="w-4 h-4" />
                         </Button>

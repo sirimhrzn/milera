@@ -2,13 +2,13 @@
 
 import type React from "react";
 
-import { useState, useRef } from "react";
+import { EmojiPicker } from "@/app/(main)/_components/EmojiPicker";
+import { MediaUpload } from "@/app/(main)/_components/MediaUpload";
+import { PollCreator } from "@/app/(main)/_components/PollCreator";
+import { ScheduleModal } from "@/app/(main)/_components/ScheduleModal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PollCreator } from "@/components/poll-creator";
-import { EmojiPicker } from "@/components/emoji-picker";
-import { ScheduleModal } from "@/components/schedule-modal";
 import {
     Calendar,
     Image,
@@ -17,9 +17,17 @@ import {
     Sticker,
     Vote,
 } from "lucide-react";
-import { MediaUpload } from "@/components/media-upload";
+import { useRef, useState } from "react";
 
-export function TweetComposer() {
+interface TweetComposerProps {
+    placeholder?: string;
+    isReply?: boolean;
+}
+
+export function TweetComposer({
+    placeholder = "What is happening?!",
+    isReply = false,
+}: TweetComposerProps) {
     const [tweetText, setTweetText] = useState("");
     const [uploadedImages, setUploadedImages] = useState<string[]>([]);
     const [showPoll, setShowPoll] = useState(false);
@@ -41,6 +49,7 @@ export function TweetComposer() {
                 images: uploadedImages,
                 poll: pollData,
                 scheduledDate,
+                isReply,
             });
             // Reset form
             setTweetText("");
@@ -94,7 +103,7 @@ export function TweetComposer() {
                 {/* Composer */}
                 <div className="flex-1">
                     <Textarea
-                        placeholder="What is happening?!"
+                        placeholder={placeholder}
                         value={tweetText}
                         onChange={(e) => setTweetText(e.target.value)}
                         className="min-h-[120px] text-xl placeholder:text-muted-foreground border-0 resize-none focus-visible:ring-0 p-0"
@@ -182,18 +191,20 @@ export function TweetComposer() {
                                 )}
                             </div>
 
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className={`p-2 rounded-full ${
-                                    scheduledDate
-                                        ? "text-primary bg-primary/10"
-                                        : "text-primary hover:bg-primary/10"
-                                }`}
-                                onClick={() => setShowScheduleModal(true)}
-                            >
-                                <Calendar className="w-5 h-5" />
-                            </Button>
+                            {!isReply && (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className={`p-2 rounded-full ${
+                                        scheduledDate
+                                            ? "text-primary bg-primary/10"
+                                            : "text-primary hover:bg-primary/10"
+                                    }`}
+                                    onClick={() => setShowScheduleModal(true)}
+                                >
+                                    <Calendar className="w-5 h-5" />
+                                </Button>
+                            )}
 
                             <Button
                                 variant="ghost"
@@ -263,14 +274,18 @@ export function TweetComposer() {
                                 disabled={!canPost}
                                 className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 py-2 rounded-full disabled:opacity-50"
                             >
-                                {scheduledDate ? "Schedule" : "Post"}
+                                {isReply
+                                    ? "Reply"
+                                    : scheduledDate
+                                    ? "Schedule"
+                                    : "Post"}
                             </Button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {showScheduleModal && (
+            {!isReply && showScheduleModal && (
                 <ScheduleModal
                     onSchedule={(date) => {
                         setScheduledDate(date);
