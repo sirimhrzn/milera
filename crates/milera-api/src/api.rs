@@ -28,7 +28,7 @@ impl MileraApi {
         password: &str,
     ) -> Result<RegistrationResponse, ApiError> {
        http_post!(
-            &self.config.api_url,
+            format!("{}/api/auth/register",&self.config.api_url),
             serde_json::json!({
                 "username": username,
                 "password": password
@@ -44,7 +44,7 @@ impl MileraApi {
         password: &str,
     ) -> Result<LoginResponse, ApiError> {
         http_post!(
-            &self.config.api_url,
+            format!("{}/api/auth/login",&self.config.api_url),
             serde_json::json!({
                 "username": username,
                 "password": password
