@@ -57,3 +57,8 @@ async fn connect_postgres_db() -> PgPool {
     info!("Database `{}` connected.", &database);
     connection
 }
+
+
+// async fn run_migrations() - - {
+
+// }
