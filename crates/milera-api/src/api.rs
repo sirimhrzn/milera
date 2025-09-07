@@ -1,6 +1,6 @@
 use crate::error::ApiError;
 use crate::{MileraConfig, http_post};
-use milera_common::response::{RegistrationResponse, LoginResponse};
+use milera_common::response::{LoginResponse, RegistrationResponse};
 use serde::{Deserialize, Serialize};
 
 #[cfg(target_family = "wasm")]
@@ -27,8 +27,8 @@ impl MileraApi {
         username: &str,
         password: &str,
     ) -> Result<RegistrationResponse, ApiError> {
-       http_post!(
-            format!("{}/api/auth/register",&self.config.api_url),
+        http_post!(
+            format!("{}/api/auth/register", &self.config.api_url),
             serde_json::json!({
                 "username": username,
                 "password": password
@@ -38,13 +38,9 @@ impl MileraApi {
         )
     }
 
-    pub fn login_user(
-        &self,
-        username: &str,
-        password: &str,
-    ) -> Result<LoginResponse, ApiError> {
+    pub fn login_user(&self, username: &str, password: &str) -> Result<LoginResponse, ApiError> {
         http_post!(
-            format!("{}/api/auth/login",&self.config.api_url),
+            format!("{}/api/auth/login", &self.config.api_url),
             serde_json::json!({
                 "username": username,
                 "password": password

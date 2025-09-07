@@ -6,7 +6,7 @@ let package = "milera-api"
 let mode = "release"
 let out  = "target/wasm" 
 let wasm_dir = "./web-js"
-let out_target = 'web' # value for --target of wasm-bindgen cli
+let out_target = 'bundler' # value for --target of wasm-bindgen cli
 
 def build [ pkg mode ] {
   $targets

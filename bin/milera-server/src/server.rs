@@ -14,15 +14,18 @@ use tracing::info;
 
 pub async fn start() -> Result<(), ServerError> {
     let app_state = Arc::new(AppState::new().await.unwrap());
-    let router = Router::new()
-        .merge(post_router(app_state.clone()))
-        .merge(discussion_router(app_state.clone()))
-        .layer(middleware::from_fn_with_state(
-            app_state.clone(),
-            authentication,
-        ))
-        .layer(axum::Extension(AuthenticatedUser::default()))
-        .merge(auth_router(app_state.clone()));
+    let router = Router::new().nest(
+        "/api",
+        Router::new()
+            .merge(post_router(app_state.clone()))
+            .merge(discussion_router(app_state.clone()))
+            .layer(middleware::from_fn_with_state(
+                app_state.clone(),
+                authentication,
+            ))
+            .layer(axum::Extension(AuthenticatedUser::default()))
+            .merge(auth_router(app_state.clone())),
+    );
 
     let host = std::env::var("HOST").expect("Expected environment variable HOST");
     let port = std::env::var("PORT").expect("Expected environment variable PORT");
