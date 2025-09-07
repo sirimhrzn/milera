@@ -12,8 +12,8 @@ use axum::{
     response::{IntoResponse, Response},
     routing::post,
 };
-use milera_common::response::RegistrationResponse;
 use bcrypt::{DEFAULT_COST, hash};
+use milera_common::response::{LoginResponse, RegistrationResponse};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::sync::Arc;
@@ -46,7 +46,10 @@ pub async fn login(
 
     Ok((
         StatusCode::OK,
-        Json(json!({ "access_token": response.0, "refresh_token": response.1 })),
+        Json(LoginResponse {
+            access_token: response.0,
+            refresh_token: response.1,
+        }),
     )
         .into_response())
 }

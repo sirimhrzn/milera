@@ -1,6 +1,7 @@
+mod api;
 mod app;
 mod discussion;
-mod api;
 mod error;
+mod macros;
 
 pub use app::MileraConfig;

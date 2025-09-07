@@ -2,19 +2,20 @@
 use wasm_bindgen::prelude::*;
 
 #[cfg(target_family = "wasm")]
-use tsify::{declare, Tsify};
+use tsify::{Tsify, declare};
 
-#[cfg_attr(target_family = "wasm", derive(tsify::Tsify, serde::Serialize, serde::Deserialize),tsify(into_wasm_abi, from_wasm_abi))]
+#[cfg_attr(
+    target_family = "wasm",
+    derive(tsify::Tsify, serde::Serialize, serde::Deserialize),
+    tsify(into_wasm_abi, from_wasm_abi)
+)]
 #[derive(Debug, thiserror::Error)]
 pub enum ApiError {
     #[error("Library not initialized")]
     LibraryUninitialized,
 
     #[error("Status code: {status_code}, Message: {message}")]
-    RequestError {
-        status_code: u16,
-        message: String,
-    },
+    RequestError { status_code: u16, message: String },
 
     #[error("Network error")]
     NetworkError,
