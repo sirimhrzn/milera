@@ -1,5 +1,8 @@
 use crate::api::middleware::authentication;
-use crate::api::{auth::router as auth_router, discussion::router as discussion_router, post::router as post_router};
+use crate::api::{
+    auth::router as auth_router, discussion::router as discussion_router,
+    post::router as post_router,
+};
 use crate::app::AppState;
 use crate::error::ServerError;
 use crate::utils::jwt::AuthenticatedUser;

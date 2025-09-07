@@ -1,8 +1,6 @@
 use crate::{
     app::AppState,
-    db::{
-        NewPost, Post,
-    },
+    db::{NewPost, Post},
     error::ServerError,
     utils::jwt::AuthenticatedUser,
 };

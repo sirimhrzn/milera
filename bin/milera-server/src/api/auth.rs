@@ -28,7 +28,14 @@ pub async fn login(
     State(state): State<Arc<AppState>>,
     Json(body): Json<UserLoginRequest>,
 ) -> Result<Response, ServerError> {
-    let id = check_if_exists::<String, i32>(state.db.as_ref(), "users", "username", "id", &body.username).await?;
+    let id = check_if_exists::<String, i32>(
+        state.db.as_ref(),
+        "users",
+        "username",
+        "id",
+        &body.username,
+    )
+    .await?;
     let user = get_user(state, id).await?;
     if !bcrypt::verify(body.password, &user.password)? {
         return Err(ServerError::InvalidCredential);

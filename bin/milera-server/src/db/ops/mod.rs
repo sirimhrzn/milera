@@ -5,8 +5,8 @@ use crate::error::{ErrorResponse, ServerError};
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use sqlx::{Decode, Encode, Row, Type};
 use sqlx::postgres::PgPool;
+use sqlx::{Encode, Row, Type};
 use std::sync::Arc;
 use tracing::Level;
 use tracing::event;
@@ -22,7 +22,10 @@ where
     for<'a> T: Encode<'a, sqlx::Postgres> + Type<sqlx::Postgres> + Send + Sync,
     R: for<'r> sqlx::Decode<'r, sqlx::Postgres> + Type<sqlx::Postgres>,
 {
-    let query = format!("SELECT {} FROM {} WHERE {} = $1", return_column, table, column);
+    let query = format!(
+        "SELECT {} FROM {} WHERE {} = $1",
+        return_column, table, column
+    );
     let result = sqlx::query(&query).bind(value).fetch_optional(db).await?;
     match result {
         Some(row) => Ok(row.get::<R, _>(return_column)),
@@ -39,8 +42,9 @@ pub async fn create_user(
 ) -> Result<i32, ServerError> {
     let db: Arc<PgPool> = state.db.clone();
 
-    if let Ok(_) = check_if_exists::<String, i32>(db.as_ref(), "users", "username", "id",&user.username).await {
-
+    if let Ok(_) =
+        check_if_exists::<String, i32>(db.as_ref(), "users", "username", "id", &user.username).await
+    {
         return Err(ServerError::CustomError(ErrorResponse {
             error_code: 409,
             reason: format!("Already used"),
@@ -353,8 +357,9 @@ impl Post {
         new_post: NewPost,
         created_by: i32,
     ) -> Result<Post, ServerError> {
-
-        let _ = check_if_exists::<i32, i32>(pool, "discussions", "id","id", &new_post.discussion_id).await?;
+        let _ =
+            check_if_exists::<i32, i32>(pool, "discussions", "id", "id", &new_post.discussion_id)
+                .await?;
         let row = sqlx::query(
             r#"
             INSERT INTO posts (created_by, anonymous, discussion_id, parent_post_id, content)
