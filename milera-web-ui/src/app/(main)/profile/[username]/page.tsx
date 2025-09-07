@@ -112,7 +112,7 @@ export default function UserProfilePage({ params }: ProfilePageProps) {
                 </header>
 
                 {/* Main Content */}
-                <main className="flex-1 overflow-y-auto">
+                <main className="flex-1">
                     {/* Profile Header */}
                     <div className="relative">
                         {/* Banner */}

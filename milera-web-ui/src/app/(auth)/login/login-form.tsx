@@ -25,9 +25,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { loginAction } from "../actions";
+import useWasm from "@/app/hooks/use-wasm";
 
 export const loginSchema = z.object({
-    email: z.email({ message: "Please enter a valid email address" }),
+    username: z
+        .string()
+        .min(2, { message: "Username must be at least 2 characters" }),
     password: z
         .string()
         .min(6, { message: "Password must be at least 6 characters" }),
@@ -44,14 +47,17 @@ export function LoginForm({
     const form = useForm<LoginFormData>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
-            email: "",
+            username: "",
             password: "",
         },
     });
 
+    const wasm = useWasm();
+    console.log(wasm);
+
     const onSubmit = async (data: LoginFormData) => {
         try {
-            const result = await loginAction(data.email, data.password);
+            const result = await loginAction(data.username, data.password);
             if (result.success) {
                 toast.success("Successfully logged in! Redirecting...");
                 router.push("/");
@@ -85,14 +91,13 @@ export function LoginForm({
                         >
                             <FormField
                                 control={form.control}
-                                name="email"
+                                name="username"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Email</FormLabel>
+                                        <FormLabel>Username</FormLabel>
                                         <FormControl>
                                             <Input
-                                                type="email"
-                                                placeholder="m@example.com"
+                                                placeholder="johndoe"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -100,6 +105,7 @@ export function LoginForm({
                                     </FormItem>
                                 )}
                             />
+
                             <FormField
                                 control={form.control}
                                 name="password"

@@ -236,7 +236,7 @@ export default function NotificationsPage() {
                 )}
 
                 {/* Main Content */}
-                <main className="flex-1 overflow-y-auto">
+                <main className="flex-1">
                     {filteredNotifications.length > 0 ? (
                         <div className="divide-y divide-border">
                             {filteredNotifications.map((notification) => (

@@ -1,14 +1,14 @@
 const BACKEND_URL =
     process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000/api";
 
-export async function loginAction(email: string, password: string) {
+export async function loginAction(username: string, password: string) {
     try {
         const response = await fetch(`${BACKEND_URL}/auth/login/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ username, password }),
         });
 
         if (!response.ok) {
@@ -23,15 +23,11 @@ export async function loginAction(email: string, password: string) {
     }
 }
 
-export async function signUpAction(
-    username: string,
-    email: string,
-    password: string
-) {
+export async function signUpAction(username: string, password: string) {
     try {
         const response = await fetch(`${BACKEND_URL}/auth/sign-up`, {
             method: "POST",
-            body: JSON.stringify({ username, email, password }),
+            body: JSON.stringify({ username, password }),
         });
 
         if (!response.ok) {

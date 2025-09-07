@@ -91,7 +91,7 @@ export default function TweetDetailPage({
             {/* Header */}
             <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border">
                 <div className="flex items-center gap-4 p-4">
-                    <Link href="/home">
+                    <Link href="/">
                         <Button variant="ghost" size="sm" className="p-2">
                             <ArrowLeftIcon className="w-5 h-5" />
                         </Button>

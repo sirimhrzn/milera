@@ -183,7 +183,7 @@ export default function SearchPage() {
                 </header>
 
                 {/* Main Content */}
-                <main className="flex-1 overflow-y-auto">
+                <main className="flex-1">
                     {showSuggestions && (
                         <div className="p-4">
                             <h2 className="font-bold text-lg mb-4">

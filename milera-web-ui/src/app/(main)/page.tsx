@@ -55,6 +55,36 @@ const mockTweets = [
         retweets: 1199,
         replies: 233,
     },
+    {
+        id: "3",
+        user: {
+            name: "OpenAI",
+            username: "OpenAI",
+            avatar: "/abstract-geometric-logo.png",
+            verified: true,
+        },
+        content:
+            "Introducing our latest research on multimodal AI systems. This breakthrough could revolutionize how we interact with technology.",
+        timestamp: "3h",
+        likes: 8899,
+        retweets: 2099,
+        replies: 455,
+    },
+    {
+        id: "4",
+        user: {
+            name: "Vercel",
+            username: "vercel",
+            avatar: "/vercel-logo.png",
+            verified: true,
+        },
+        content:
+            "Ship faster with our new deployment pipeline. Zero-config, maximum performance. Try it today!",
+        timestamp: "5h",
+        likes: 5599,
+        retweets: 1199,
+        replies: 233,
+    },
 ];
 
 export default function Home() {
@@ -99,7 +129,7 @@ export default function Home() {
                 </header>
 
                 {/* Main Content */}
-                <main className="flex-2 overflow-y-auto">
+                <main className="flex-2">
                     {/* Tweet Composer */}
                     <TweetComposer />
 

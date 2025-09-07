@@ -67,6 +67,8 @@ export default function ProfilePage() {
         "Posts",
         "Replies",
         "Highlights",
+        "Videos",
+        "Photos",
         "Articles",
         "Media",
         "Likes",
@@ -96,7 +98,7 @@ export default function ProfilePage() {
                 </header>
 
                 {/* Main Content */}
-                <main className="flex-1 overflow-y-auto">
+                <main className="flex-1">
                     {/* Profile Header */}
                     <div className="relative">
                         {/* Banner */}

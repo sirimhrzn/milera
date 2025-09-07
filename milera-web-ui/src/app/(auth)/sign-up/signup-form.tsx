@@ -30,7 +30,6 @@ export const signUpSchema = z.object({
     username: z
         .string()
         .min(2, { message: "Username must be at least 2 characters" }),
-    email: z.email({ message: "Please enter a valid email address" }),
     password: z
         .string()
         .min(6, { message: "Password must be at least 6 characters" }),
@@ -48,18 +47,13 @@ export function SignUpForm({
         resolver: zodResolver(signUpSchema),
         defaultValues: {
             username: "",
-            email: "",
             password: "",
         },
     });
 
     const onSubmit = async (data: SignUpFormData) => {
         try {
-            const result = await signUpAction(
-                data.username,
-                data.email,
-                data.password
-            );
+            const result = await signUpAction(data.username, data.password);
             if (result.success) {
                 toast.success("Successfully signed up! Redirecting...");
                 router.push("/login");
@@ -107,23 +101,7 @@ export function SignUpForm({
                                     </FormItem>
                                 )}
                             />
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="email"
-                                                placeholder="m@example.com"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+
                             <FormField
                                 control={form.control}
                                 name="password"
