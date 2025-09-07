@@ -2,14 +2,12 @@ use crate::dto::User;
 use crate::error::ServerError;
 use chrono::Local;
 use jsonwebtoken::errors::Error;
-use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, TokenData, Validation};
+use jsonwebtoken::{DecodingKey, EncodingKey, Header, TokenData, Validation, decode, encode};
 use serde::{Deserialize, Serialize};
 use std::ops::Add;
 use std::time::Duration;
-use tracing::event;
 use tracing::Level;
-
-
+use tracing::event;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {

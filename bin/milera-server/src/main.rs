@@ -1,10 +1,10 @@
-mod server;
-mod app;
-mod error;
 mod api;
+mod app;
 mod db;
-mod utils;
 mod dto;
+mod error;
+mod server;
+mod utils;
 
 use server::start as start_http_server;
 

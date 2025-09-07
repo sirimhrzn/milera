@@ -1,8 +1,8 @@
-use serde::Serialize;
-use thiserror::Error;
+use axum::Json;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
-use axum::Json;
+use serde::Serialize;
+use thiserror::Error;
 use tracing::error;
 
 #[derive(Debug, Error)]
@@ -59,7 +59,6 @@ pub struct ErrorResponse {
     #[serde(rename = "message")]
     pub reason: String,
 }
-
 
 impl IntoResponse for ServerError {
     fn into_response(self) -> Response {

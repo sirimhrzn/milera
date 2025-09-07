@@ -7,20 +7,17 @@ use tracing::info;
 pub static PG_CONNECTION: OnceCell<Arc<PgPool>> = OnceCell::new();
 
 pub struct AppState {
-    pub db: Arc<PgPool>
+    pub db: Arc<PgPool>,
 }
 
 impl AppState {
-
     pub async fn new() -> Result<Self, ServerError> {
         std::env::var("APP_URL").expect("Expected APP_URL environment variable.");
         let pg_pool = Arc::new(connect_postgres_db().await);
         let _ = PG_CONNECTION.set(pg_pool.clone());
 
-
-        Ok(Self { db: pg_pool  })
+        Ok(Self { db: pg_pool })
     }
-
 }
 
 async fn connect_postgres_db() -> PgPool {
@@ -57,7 +54,6 @@ async fn connect_postgres_db() -> PgPool {
     info!("Database `{}` connected.", &database);
     connection
 }
-
 
 // async fn run_migrations() - - {
 
