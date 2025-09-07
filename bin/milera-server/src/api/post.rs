@@ -1,14 +1,12 @@
 use crate::{
     app::AppState,
-    db::{create_post, find_all},
+    db::{create_post, db_execute, find_all, QueryFilter},
     error::ServerError,
     utils::jwt::AuthenticatedUser,
 };
+
 use axum::{
-    Extension, Json, Router,
-    extract::{Query, State},
-    response::{IntoResponse, Response},
-    routing::{get, post},
+    extract::{Path, Query, State}, http::StatusCode, response::{IntoResponse, Response}, routing::{get, post}, Extension, Json, Router
 };
 use milera_common::models::Post;
 use milera_common::request::NewPost;
@@ -55,4 +53,19 @@ pub async fn get_posts(
     .collect::<Vec<_>>();
 
     Ok(Json(posts).into_response())
+}
+
+pub async fn delete_post(
+    state: State<Arc<AppState>>,
+    Extension(user): Extension<AuthenticatedUser>,
+    Path(id): Path<i32>,
+) -> Result<Response, ServerError> {
+
+    if user.user_id != id {
+        return Err(ServerError::Unauthorized);
+    }
+
+    let _ =  db_execute(state.db.as_ref(), "DELETE FROM posts WHERE id = $1", vec![QueryFilter::new("id", id)]).await?;
+
+    Ok(StatusCode::NO_CONTENT.into_response())
 }

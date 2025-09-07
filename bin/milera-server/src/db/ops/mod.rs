@@ -178,7 +178,7 @@ pub async fn find_all<T, R>(
     pool: &sqlx::PgPool,
     query: &str,
     pagination: Option<Pagination>,
-    filters: Option<Vec<Filter<R>>>,
+    filters: Option<Vec<QueryFilter<R>>>,
 ) -> Result<Vec<T>, sqlx::Error>
 where
     T: for<'r> sqlx::FromRow<'r, sqlx::postgres::PgRow> + Send + Sync + Unpin,
@@ -218,7 +218,45 @@ where
     Ok(rows)
 }
 
-pub struct Filter<T: for<'a> Encode<'a, sqlx::Postgres> + Type<sqlx::Postgres> + Send + Sync> {
-    column: String,
-    value: T,
+pub struct QueryFilter<T: for<'a> Encode<'a, sqlx::Postgres> + Type<sqlx::Postgres> + Send + Sync> {
+    pub column: String,
+    pub value: T,
+}
+
+impl<T: for<'a> Encode<'a, sqlx::Postgres> + Type<sqlx::Postgres> + Send + Sync> QueryFilter<T> {
+    pub fn new(column: &str, value: T) -> Self {
+        QueryFilter {
+            column: column.to_string(),
+            value,
+        }
+    }
+}
+
+
+
+pub async fn db_execute<R>(
+    pool: &sqlx::PgPool,
+    query: &str,
+    filters: Vec<QueryFilter<R>>
+) -> Result<u64, sqlx::Error>
+where
+    for<'a> R: Encode<'a, sqlx::Postgres> + Type<sqlx::Postgres> + Send + Sync,
+{
+    let mut query = query.to_string();
+        for (index, ref filter) in filters.iter().enumerate() {
+            if index > 0 {
+                query.push_str(" AND ");
+            } else {
+                query.push_str(" WHERE ");
+            }
+            query.push_str(&format!("{} = ${}", filter.column, index + 1));
+        }
+    let mut sqlx_query = sqlx::query(&query);
+
+        for (index, filter) in filters.iter().enumerate() {
+            sqlx_query = sqlx_query.bind(&filter.value);
+        }
+
+    let rows = sqlx_query.execute(pool).await?;
+    Ok(rows.rows_affected())
 }

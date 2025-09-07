@@ -9,9 +9,9 @@ ehttp = { workspace = true, features = ["json", "multipart"] }
 serde_json = { workspace = true }
 wasm-bindgen-futures = "0.4.51"
 thiserror = { workspace = true }
+milera-common = { path = "../milera-common", features = ["wasm"] }
 
 [target.'cfg(target_family = "wasm")'.dependencies]
-milera-common = { path = "../milera-common", features = ["wasm"] }
 wasm-bindgen = { workspace = true }
 tsify = { workspace = true }
 

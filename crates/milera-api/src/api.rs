@@ -22,6 +22,7 @@ impl MileraApi {
         Self { config }
     }
 
+    #[cfg_attr(target_family = "wasm", wasm_bindgen)]
     pub fn register_user(
         &self,
         username: &str,
@@ -38,6 +39,7 @@ impl MileraApi {
         )
     }
 
+    #[cfg_attr(target_family = "wasm", wasm_bindgen)]
     pub fn login_user(&self, username: &str, password: &str) -> Result<LoginResponse, ApiError> {
         http_post!(
             format!("{}/api/auth/login", &self.config.api_url),
@@ -49,4 +51,5 @@ impl MileraApi {
             LoginResponse
         )
     }
+
 }
