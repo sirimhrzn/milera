@@ -3,15 +3,29 @@
 import { Button } from "@/components/ui/button";
 import { Bell, Home, MailIcon, Search, User } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface BottomNavigationProps {
     activeTab?: string;
 }
 
 export function BottomNavigation({ activeTab }: BottomNavigationProps) {
+    const pathname = usePathname();
+
+    const getActiveTab = () => {
+        if (pathname === "/") return "home";
+        if (pathname.startsWith("/search")) return "search";
+        if (pathname.startsWith("/notifications")) return "notifications";
+        if (pathname.startsWith("/messages")) return "messages";
+        if (pathname.startsWith("/profile")) return "profile";
+        return activeTab || "";
+    };
+
+    const currentTab = getActiveTab();
+
     return (
-        <nav className="sticky bottom-0 bg-background border-t border-border">
-            <div className="flex items-center justify-around py-2">
+        <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50">
+            <div className="flex items-center justify-between py-2 px-4 lg:px-0 container mx-auto">
                 <Link href="/">
                     <Button
                         variant="ghost"
@@ -20,7 +34,7 @@ export function BottomNavigation({ activeTab }: BottomNavigationProps) {
                     >
                         <Home
                             className={`w-6 h-6 ${
-                                activeTab === "home"
+                                currentTab === "home"
                                     ? "text-primary"
                                     : "text-muted-foreground"
                             }`}
@@ -35,7 +49,7 @@ export function BottomNavigation({ activeTab }: BottomNavigationProps) {
                     >
                         <Search
                             className={`w-6 h-6 ${
-                                activeTab === "search"
+                                currentTab === "search"
                                     ? "text-primary"
                                     : "text-muted-foreground"
                             }`}
@@ -50,7 +64,7 @@ export function BottomNavigation({ activeTab }: BottomNavigationProps) {
                     >
                         <Bell
                             className={`w-6 h-6 ${
-                                activeTab === "notifications"
+                                currentTab === "notifications"
                                     ? "text-primary"
                                     : "text-muted-foreground"
                             }`}
@@ -65,7 +79,7 @@ export function BottomNavigation({ activeTab }: BottomNavigationProps) {
                     >
                         <MailIcon
                             className={`w-6 h-6 ${
-                                activeTab === "messages"
+                                currentTab === "messages"
                                     ? "text-primary"
                                     : "text-muted-foreground"
                             }`}
@@ -80,7 +94,7 @@ export function BottomNavigation({ activeTab }: BottomNavigationProps) {
                     >
                         <User
                             className={`w-6 h-6 ${
-                                activeTab === "profile"
+                                currentTab === "profile"
                                     ? "text-primary"
                                     : "text-muted-foreground"
                             }`}

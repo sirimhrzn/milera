@@ -11,7 +11,6 @@ import {
     Verified,
 } from "lucide-react";
 import { useState } from "react";
-import { BottomNavigation } from "../../_components/BottomNavigation";
 import { TweetCard } from "../../_components/TweetCard";
 
 interface ProfilePageProps {
@@ -269,8 +268,6 @@ export default function UserProfilePage({ params }: ProfilePageProps) {
                         )}
                     </div>
                 </main>
-
-                <BottomNavigation />
             </div>
         </div>
     );

@@ -11,7 +11,6 @@ import {
     Verified,
 } from "lucide-react";
 import { useState } from "react";
-import { BottomNavigation } from "../_components/BottomNavigation";
 import { TweetCard } from "../_components/TweetCard";
 
 const mockUser = {
@@ -62,7 +61,7 @@ const mockUserTweets = [
     },
 ];
 
-export function ProfilePage() {
+export default function ProfilePage() {
     const [activeTab, setActiveTab] = useState("Posts");
     const tabs = [
         "Posts",
@@ -237,8 +236,6 @@ export function ProfilePage() {
                         )}
                     </div>
                 </main>
-
-                <BottomNavigation activeTab="profile" />
             </div>
         </div>
     );

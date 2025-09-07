@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, SettingsIcon } from "lucide-react";
 import { useState } from "react";
-import { BottomNavigation } from "../_components/BottomNavigation";
 import { NotificationCard } from "../_components/NotificationCard";
 
 interface Notification {
@@ -142,7 +141,7 @@ const mockNotifications: Notification[] = [
     },
 ];
 
-export function NotificationsPage() {
+export default function NotificationsPage() {
     const [activeTab, setActiveTab] = useState("All");
     const [notifications, setNotifications] = useState(mockNotifications);
 
@@ -262,8 +261,6 @@ export function NotificationsPage() {
                         </div>
                     )}
                 </main>
-
-                <BottomNavigation activeTab="notifications" />
             </div>
         </div>
     );

@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, Search, Verified, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { TweetCard } from "../_components/TweetCard";
-import { BottomNavigation } from "../_components/BottomNavigation";
 
 const mockSearchSuggestions = [
     "JavaScript",
@@ -82,7 +81,7 @@ const mockTweets = [
     },
 ];
 
-export function SearchPage() {
+export default function SearchPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [activeTab, setActiveTab] = useState("Top");
     const [searchResults, setSearchResults] = useState<
@@ -316,8 +315,6 @@ export function SearchPage() {
                         </>
                     )}
                 </main>
-
-                <BottomNavigation activeTab="search" />
             </div>
         </div>
     );

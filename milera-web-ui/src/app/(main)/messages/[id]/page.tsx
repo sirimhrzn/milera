@@ -1,10 +1,8 @@
 "use client";
 
-import type React from "react";
-import { useState, useRef, useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     ArrowLeftIcon,
     Image,
@@ -13,6 +11,8 @@ import {
     Sticker,
 } from "lucide-react";
 import Link from "next/link";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ChatPageProps {
     params: {

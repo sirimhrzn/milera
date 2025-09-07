@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MailIcon, SearchIcon, SettingsIcon } from "lucide-react";
-import { BottomNavigation } from "../_components/BottomNavigation";
 import Link from "next/link";
+import { useState } from "react";
 
 const conversations = [
     {
@@ -55,7 +54,7 @@ const conversations = [
     },
 ];
 
-export function MessagesPage() {
+export default function MessagesPage() {
     const [searchQuery, setSearchQuery] = useState("");
 
     const filteredConversations = conversations.filter(
@@ -160,8 +159,6 @@ export function MessagesPage() {
                     ))
                 )}
             </div>
-
-            <BottomNavigation activeTab="messages" />
         </div>
     );
 }
