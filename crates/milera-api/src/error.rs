@@ -5,6 +5,11 @@ use wasm_bindgen::prelude::*;
 #[cfg(target_family = "wasm")]
 use tsify::{Tsify, declare};
 
+
+
+#[cfg(target_family = "wasm")]
+use reqwest_wasm as reqwest;
+
 #[cfg_attr(
     target_family = "wasm",
     derive(tsify::Tsify, serde::Serialize, serde::Deserialize),
@@ -26,7 +31,7 @@ pub enum ApiError {
 
     #[error("Parse error: {0}")]
     ParseError(String),
-    #[error("JSON error: {0}")]
+    #[error("SON error: {0}")]
     JsonError(String),
 
 }
@@ -35,5 +40,14 @@ pub enum ApiError {
 impl From<serde_json::Error> for ApiError {
     fn from(err: serde_json::Error) -> Self {
         ApiError::JsonError(err.to_string())
+    }
+}
+
+
+
+#[cfg(target_family = "wasm")]
+impl From<reqwest::Error> for ApiError {
+    fn from(err: reqwest::Error) -> Self {
+        ApiError::RequestError { status_code: err.status().unwrap_or(reqwest::StatusCode::INTERNAL_SERVER_ERROR).into(), message: err.to_string() }
     }
 }

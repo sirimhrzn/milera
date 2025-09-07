@@ -1,16 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
-export function register_user(api: MileraApi): RegistrationResponse;
-export function register_user_2(api: MileraApi): RegistrationResponse;
-export interface MileraApi {
-    config: MileraConfig;
-}
-
+export function register_user(api: MileraApi): Promise<RegistrationResponse>;
 export type ApiError = "LibraryUninitialized" | { RequestError: { status_code: number; message: string } } | "NetworkError" | { HttpError: string } | { ParseError: string } | { JsonError: string };
-
-export interface MileraConfig {
-    api_url: string;
-}
 
 export interface NewDiscussion {
     title: string;
@@ -65,25 +56,39 @@ export interface Post {
     updated_at: DateTime<Utc>;
 }
 
+export class MileraApi {
+  free(): void;
+  constructor(config: MileraConfig);
+  register_user(username: string, password: string): Promise<RegistrationResponse>;
+  login_user(username: string, password: string): Promise<LoginResponse>;
+}
+export class MileraConfig {
+  free(): void;
+  constructor(api_url: string);
+  readonly api_url: string;
+}
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly mileraapi_new: (a: any) => any;
-  readonly mileraapi_register_user: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
-  readonly mileraapi_login_user: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
-  readonly register_user: (a: any) => [number, number, number];
-  readonly register_user_2: (a: any) => [number, number, number];
-  readonly mileraconfig_new: (a: number, b: number) => any;
+  readonly __wbg_mileraapi_free: (a: number, b: number) => void;
+  readonly mileraapi_new: (a: number) => number;
+  readonly mileraapi_register_user: (a: number, b: number, c: number, d: number, e: number) => any;
+  readonly mileraapi_login_user: (a: number, b: number, c: number, d: number, e: number) => any;
+  readonly register_user: (a: number) => any;
+  readonly __wbg_mileraconfig_free: (a: number, b: number) => void;
+  readonly mileraconfig_new: (a: number, b: number) => number;
+  readonly mileraconfig_api_url: (a: number) => [number, number];
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
   readonly __wbindgen_exn_store: (a: number) => void;
   readonly __externref_table_alloc: () => number;
   readonly __wbindgen_export_4: WebAssembly.Table;
   readonly __wbindgen_export_5: WebAssembly.Table;
-  readonly __externref_table_dealloc: (a: number) => void;
-  readonly closure33_externref_shim: (a: number, b: number, c: any) => void;
+  readonly __wbindgen_free: (a: number, b: number, c: number) => void;
+  readonly closure89_externref_shim: (a: number, b: number, c: any) => void;
+  readonly closure198_externref_shim: (a: number, b: number, c: any, d: any) => void;
   readonly __wbindgen_start: () => void;
 }
 

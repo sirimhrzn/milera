@@ -5,14 +5,17 @@ edition = "2024"
 
 [dependencies]
 serde = { workspace = true }
-ehttp = { workspace = true, features = ["json", "multipart"] }
+# ehttp = { workspace = true, features = ["json", "multipart"] }
 serde_json = { workspace = true }
-wasm-bindgen-futures = "0.4.51"
+# wasm-bindgen-futures = "0.4.51"
 thiserror = { workspace = true }
 milera-common = { path = "../milera-common", features = ["wasm"] }
 
 [target.'cfg(target_family = "wasm")'.dependencies]
 wasm-bindgen = { workspace = true }
+wasm-bindgen-futures = "0.4.1"
+# wasm-bindgen-futures =
+reqwest-wasm = { workspace = true , features = ["json", "blocking"]}
 tsify = { workspace = true }
 
 [lib]

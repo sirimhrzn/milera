@@ -7,10 +7,12 @@ use crate::app::AppState;
 use crate::error::ServerError;
 use crate::utils::jwt::AuthenticatedUser;
 
+use axum::http::Method;
 use axum::{Router, middleware};
 use std::sync::Arc;
 use tokio::net::TcpListener;
 use tracing::info;
+use tower_http::cors::{CorsLayer, Any};
 
 pub async fn start() -> Result<(), ServerError> {
     let app_state = Arc::new(AppState::new().await.unwrap());
@@ -25,7 +27,11 @@ pub async fn start() -> Result<(), ServerError> {
             ))
             .layer(axum::Extension(AuthenticatedUser::default()))
             .merge(auth_router(app_state.clone())),
-    );
+    )
+    .layer(CorsLayer::new()
+            .allow_origin(Any)
+            .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
+            .allow_headers(Any));
 
     let host = std::env::var("HOST").expect("Expected environment variable HOST");
     let port = std::env::var("PORT").expect("Expected environment variable PORT");
