@@ -1,27 +1,31 @@
+// Claude wrote some of this.
 use crate::app::AppState;
 use crate::dto::User;
 use crate::error::{ErrorResponse, ServerError};
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use sqlx::Row;
+use sqlx::{Decode, Encode, Row, Type};
 use sqlx::postgres::PgPool;
 use std::sync::Arc;
 use tracing::Level;
 use tracing::event;
 
-pub async fn check_if_exists(
+pub async fn check_if_exists<T, R>(
     db: &PgPool,
     table: &str,
     column: &str,
-    value: &String,
-) -> Result<i32, ServerError> {
-    let query = format!("SELECT id FROM {} WHERE {} = $1", table, column);
-
+    return_column: &str,
+    value: &T,
+) -> Result<R, ServerError>
+where
+    for<'a> T: Encode<'a, sqlx::Postgres> + Type<sqlx::Postgres> + Send + Sync,
+    R: for<'r> sqlx::Decode<'r, sqlx::Postgres> + Type<sqlx::Postgres>,
+{
+    let query = format!("SELECT {} FROM {} WHERE {} = $1", return_column, table, column);
     let result = sqlx::query(&query).bind(value).fetch_optional(db).await?;
-
     match result {
-        Some(row) => Ok(row.get::<i32, _>("id")),
+        Some(row) => Ok(row.get::<R, _>(return_column)),
         None => Err(ServerError::EntityNotFound),
     }
 }
@@ -35,7 +39,8 @@ pub async fn create_user(
 ) -> Result<i32, ServerError> {
     let db: Arc<PgPool> = state.db.clone();
 
-    if let Ok(_) = check_if_exists(db.as_ref(), "users", "username", &user.username).await {
+    if let Ok(_) = check_if_exists::<String, i32>(db.as_ref(), "users", "username", "id",&user.username).await {
+
         return Err(ServerError::CustomError(ErrorResponse {
             error_code: 409,
             reason: format!("Already used"),
@@ -75,6 +80,19 @@ pub async fn get_user(state: Arc<AppState>, id: i32) -> Result<User, ServerError
     })
 }
 
+// Struct for updating discussions (all fields optional except id)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UpdateDiscussion {
+    pub id: i32,
+    pub title: Option<String>,
+    pub description: Option<String>,
+    pub location: Option<String>,
+    pub lon: Option<Decimal>,
+    pub lat: Option<Decimal>,
+    pub location_detail: Option<String>,
+    pub anonymous: Option<bool>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Discussion {
     pub id: i32,
@@ -100,20 +118,7 @@ pub struct NewDiscussion {
     pub lon: Option<Decimal>,
     pub lat: Option<Decimal>,
     pub location_detail: Option<String>,
-    pub anonymous: bool
-}
-
-// Struct for updating discussions (all fields optional except id)
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct UpdateDiscussion {
-    pub id: i32,
-    pub title: Option<String>,
-    pub description: Option<String>,
-    pub location: Option<String>,
-    pub lon: Option<Decimal>,
-    pub lat: Option<Decimal>,
-    pub location_detail: Option<String>,
-    pub anonymous: Option<bool>,
+    pub anonymous: bool,
 }
 
 impl Discussion {
@@ -121,9 +126,8 @@ impl Discussion {
     pub async fn create(
         pool: &sqlx::PgPool,
         new_discussion: NewDiscussion,
-        created_by: i32
+        created_by: i32,
     ) -> Result<Discussion, ServerError> {
-
         let row = sqlx::query(
             r#"
             INSERT INTO discussions (title, description, location, lon, lat, location_detail, anonymous, created_by)
@@ -321,4 +325,60 @@ impl Discussion {
 
     //     Ok(discussion)
     // }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Post {
+    pub id: i32,
+    pub created_by: i32,
+    pub anonymous: bool,
+    pub discussion_id: i32,
+    pub parent_post_id: Option<i32>,
+    pub content: String,
+    pub created_at: DateTime<Utc>, // Slight inconsistency in naming
+    pub updated_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NewPost {
+    pub discussion_id: i32,
+    pub parent_post_id: Option<i32>,
+    pub content: String,
+    pub anonymous: bool,
+}
+
+impl Post {
+    pub async fn create(
+        pool: &sqlx::PgPool,
+        new_post: NewPost,
+        created_by: i32,
+    ) -> Result<Post, ServerError> {
+
+        let _ = check_if_exists::<i32, i32>(pool, "discussions", "id","id", &new_post.discussion_id).await?;
+        let row = sqlx::query(
+            r#"
+            INSERT INTO posts (created_by, anonymous, discussion_id, parent_post_id, content)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING *
+            "#,
+        )
+        .bind(created_by)
+        .bind(new_post.anonymous)
+        .bind(new_post.discussion_id)
+        .bind(new_post.parent_post_id)
+        .bind(new_post.content)
+        .fetch_one(pool)
+        .await?;
+
+        Ok(Post {
+            id: row.get::<i32, _>("id"),
+            created_by: row.get::<i32, _>("created_by"),
+            anonymous: row.get::<bool, _>("anonymous"),
+            discussion_id: row.get::<i32, _>("discussion_id"),
+            parent_post_id: row.get::<Option<i32>, _>("parent_post_id"),
+            content: row.get::<String, _>("content"),
+            created_at: row.get::<DateTime<Utc>, _>("created_at"),
+            updated_at: row.get::<DateTime<Utc>, _>("updated_at"),
+        })
+    }
 }

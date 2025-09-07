@@ -1,10 +1,10 @@
 use crate::api::middleware::authentication;
-use crate::api::{auth::router as auth_router, discussion::router as discussion_router};
+use crate::api::{auth::router as auth_router, discussion::router as discussion_router, post::router as post_router};
 use crate::app::AppState;
 use crate::error::ServerError;
 use crate::utils::jwt::AuthenticatedUser;
 
-use axum::{middleware, Router};
+use axum::{Router, middleware};
 use std::sync::Arc;
 use tokio::net::TcpListener;
 use tracing::info;
@@ -12,8 +12,12 @@ use tracing::info;
 pub async fn start() -> Result<(), ServerError> {
     let app_state = Arc::new(AppState::new().await.unwrap());
     let router = Router::new()
+        .merge(post_router(app_state.clone()))
         .merge(discussion_router(app_state.clone()))
-        .layer(middleware::from_fn_with_state(app_state.clone(), authentication))
+        .layer(middleware::from_fn_with_state(
+            app_state.clone(),
+            authentication,
+        ))
         .layer(axum::Extension(AuthenticatedUser::default()))
         .merge(auth_router(app_state.clone()));
 

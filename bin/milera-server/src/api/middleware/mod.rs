@@ -1,7 +1,7 @@
 use crate::app::AppState;
 use crate::db::get_user;
 use crate::error::ServerError;
-use crate::utils::jwt::{validate_jwt, AuthenticatedUser};
+use crate::utils::jwt::{AuthenticatedUser, validate_jwt};
 use axum::extract::{Request, State};
 use axum::middleware::Next;
 use axum::response::Response;
@@ -23,15 +23,14 @@ pub async fn authentication(
             .await?
             .id;
 
-        let auth_user = AuthenticatedUser{
-            user_id: user_id as i32
+        let auth_user = AuthenticatedUser {
+            user_id: user_id as i32,
         };
 
         *request
             .extensions_mut()
             .get_mut::<AuthenticatedUser>()
             .unwrap() = auth_user;
-
     } else {
         return Err(ServerError::Unauthorized);
     }

@@ -1,6 +1,6 @@
 use crate::{
     app::AppState,
-    db::{check_if_exists, create_user, get_user, user::User as DBUser},
+    db::{check_if_exists, create_user, get_user},
     dto::User,
     error::ServerError,
     utils::jwt::{authenticate_user, generate_jwt},
@@ -10,7 +10,7 @@ use axum::{
     extract::State,
     http::StatusCode,
     response::{IntoResponse, Response},
-    routing::{get, post},
+    routing::post,
 };
 use bcrypt::{DEFAULT_COST, hash};
 use serde::{Deserialize, Serialize};
@@ -28,7 +28,7 @@ pub async fn login(
     State(state): State<Arc<AppState>>,
     Json(body): Json<UserLoginRequest>,
 ) -> Result<Response, ServerError> {
-    let id = check_if_exists(state.db.as_ref(), "users", "username", &body.username).await?;
+    let id = check_if_exists::<String, i32>(state.db.as_ref(), "users", "username", "id", &body.username).await?;
     let user = get_user(state, id).await?;
     if !bcrypt::verify(body.password, &user.password)? {
         return Err(ServerError::InvalidCredential);

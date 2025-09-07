@@ -1,6 +1,8 @@
 use crate::{
     app::AppState,
-    db::{Discussion, NewDiscussion},
+    db::{
+        NewPost, Post,
+    },
     error::ServerError,
     utils::jwt::AuthenticatedUser,
 };
@@ -15,15 +17,15 @@ use std::sync::Arc;
 
 pub fn router(state: Arc<AppState>) -> Router {
     Router::new()
-        .route("/discussion/create", post(create_discussion))
+        .route("/post/create", post(create_post))
         .with_state(state)
 }
 
-pub async fn create_discussion(
+pub async fn create_post(
     state: State<Arc<AppState>>,
     Extension(user): Extension<AuthenticatedUser>,
-    Json(payload): Json<NewDiscussion>,
+    Json(payload): Json<NewPost>,
 ) -> Result<Response, ServerError> {
-    let _ = Discussion::create(state.db.as_ref(), payload, user.user_id).await?;
-    Ok(Json(json!({ "message": "Discussion created successfully"})).into_response())
+    let _ = Post::create(state.db.as_ref(), payload, user.user_id).await?;
+    Ok(Json(json!({ "message": "Post created successfully"})).into_response())
 }
