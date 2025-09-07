@@ -220,6 +220,30 @@ function takeFromExternrefTable0(idx) {
     wasm.__externref_table_dealloc(idx);
     return value;
 }
+/**
+ * @param {MileraApi} api
+ * @returns {RegistrationResponse}
+ */
+export function register_user(api) {
+    const ret = wasm.register_user(api);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return takeFromExternrefTable0(ret[0]);
+}
+
+/**
+ * @param {MileraApi} api
+ * @returns {RegistrationResponse}
+ */
+export function register_user_2(api) {
+    const ret = wasm.register_user_2(api);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return takeFromExternrefTable0(ret[0]);
+}
+
 function __wbg_adapter_36(arg0, arg1, arg2) {
     wasm.closure33_externref_shim(arg0, arg1, arg2);
 }
@@ -589,7 +613,7 @@ function __wbg_get_imports() {
         const ret = false;
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper368 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper373 = function(arg0, arg1, arg2) {
         const ret = makeMutClosure(arg0, arg1, 32, __wbg_adapter_36);
         return ret;
     };

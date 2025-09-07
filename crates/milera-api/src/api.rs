@@ -13,7 +13,7 @@ use wasm_bindgen::prelude::*;
 )]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MileraApi {
-    config: MileraConfig,
+    pub config: MileraConfig,
 }
 
 #[cfg_attr(target_family = "wasm", wasm_bindgen)]
@@ -52,4 +52,14 @@ impl MileraApi {
         )
     }
 
+}
+
+#[cfg_attr(target_family = "wasm", wasm_bindgen)]
+pub fn register_user(api: &MileraApi) -> Result<RegistrationResponse, ApiError> {
+    Ok(api.register_user("username", "password")?)
+}
+
+#[cfg_attr(target_family = "wasm", wasm_bindgen)]
+pub fn register_user_2(api: MileraApi) -> Result<RegistrationResponse, ApiError> {
+    Ok(api.register_user("username", "password")?)
 }

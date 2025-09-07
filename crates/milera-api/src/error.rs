@@ -1,3 +1,4 @@
+use serde_json::error;
 #[cfg(target_family = "wasm")]
 use wasm_bindgen::prelude::*;
 
@@ -25,23 +26,14 @@ pub enum ApiError {
 
     #[error("Parse error: {0}")]
     ParseError(String),
+    #[error("JSON error: {0}")]
+    JsonError(String),
+
 }
 
-// #[cfg(target_family = "wasm")]
-// impl From<reqwest::Error> for ApiError {
-//     fn from(err: reqwest::Error) -> Self {
-//         ApiError::RequestError {
-//             status_code: err.status().unwrap_or(StatusCode::INTERNAL_SERVER_ERROR).as_u16(),
-//             message: err.to_string(),
-//         }
-//     }
-// }
-
-// #[cfg(target_family = "wasm")]
-// impl From<jiff::Error> for ApiError {
-//     fn from(err: jiff::Error) -> Self {
-//         ApiError::DateParseError {
-//             message: err.to_string()
-//         }
-//     }
-// }
+#[cfg(target_family = "wasm")]
+impl From<serde_json::Error> for ApiError {
+    fn from(err: serde_json::Error) -> Self {
+        ApiError::JsonError(err.to_string())
+    }
+}

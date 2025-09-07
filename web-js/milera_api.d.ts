@@ -1,10 +1,12 @@
 /* tslint:disable */
 /* eslint-disable */
-export type ApiError = "LibraryUninitialized" | { RequestError: { status_code: number; message: string } } | "NetworkError" | { HttpError: string } | { ParseError: string };
-
+export function register_user(api: MileraApi): RegistrationResponse;
+export function register_user_2(api: MileraApi): RegistrationResponse;
 export interface MileraApi {
     config: MileraConfig;
 }
+
+export type ApiError = "LibraryUninitialized" | { RequestError: { status_code: number; message: string } } | "NetworkError" | { HttpError: string } | { ParseError: string } | { JsonError: string };
 
 export interface MileraConfig {
     api_url: string;
@@ -71,6 +73,8 @@ export interface InitOutput {
   readonly mileraapi_new: (a: any) => any;
   readonly mileraapi_register_user: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
   readonly mileraapi_login_user: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
+  readonly register_user: (a: any) => [number, number, number];
+  readonly register_user_2: (a: any) => [number, number, number];
   readonly mileraconfig_new: (a: number, b: number) => any;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;

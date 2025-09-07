@@ -4,6 +4,8 @@ export const memory: WebAssembly.Memory;
 export const mileraapi_new: (a: any) => any;
 export const mileraapi_register_user: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
 export const mileraapi_login_user: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
+export const register_user: (a: any) => [number, number, number];
+export const register_user_2: (a: any) => [number, number, number];
 export const mileraconfig_new: (a: number, b: number) => any;
 export const __wbindgen_malloc: (a: number, b: number) => number;
 export const __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
