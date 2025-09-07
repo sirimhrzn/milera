@@ -1,0 +1,30 @@
+version: '3'
+services:
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=siri
+      - POSTGRES_USER=siri
+      - POSTGRES_DB=milera-db
+    volumes:
+      - "milera-storage:/var/lib/postgresql/data"
+  # redis:
+  #   container_name: redis
+  #   image: 'redis:6'
+  #   restart: unless-stopped
+  #   volumes:
+  #     - '/etc/localtime:/etc/localtime'
+  #   ports:
+  #     - "6380:6379"
+  #   command: redis-server
+  my-adminer:
+    image: adminer:latest
+    container_name: milera-adminer
+    ports:
+      - 8091:8080
+volumes:
+  milera-storage:
+
