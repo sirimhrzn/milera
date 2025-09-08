@@ -133,9 +133,6 @@ export default function SearchPage() {
                 {/* Header */}
                 <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
                     <div className="flex items-center gap-3 p-4">
-                        <Button variant="ghost" size="sm" className="p-2">
-                            <ArrowLeft className="w-5 h-5" />
-                        </Button>
                         <div className="flex-1 relative">
                             <div className="relative">
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />

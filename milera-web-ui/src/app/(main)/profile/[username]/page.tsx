@@ -8,6 +8,7 @@ import {
     LinkIcon,
     LocationEdit,
     MoreHorizontalIcon,
+    Settings,
     Verified,
 } from "lucide-react";
 import { use, useState } from "react";
@@ -103,7 +104,7 @@ export default function UserProfilePage({ params }: { params: Params }) {
                             </p>
                         </div>
                         <Button variant="ghost" size="sm" className="p-2">
-                            <MoreHorizontalIcon className="w-5 h-5" />
+                            <Settings className="w-5 h-5" />
                         </Button>
                     </div>
                 </header>

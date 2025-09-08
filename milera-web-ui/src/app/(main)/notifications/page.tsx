@@ -182,9 +182,6 @@ export default function NotificationsPage() {
                 <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
                     <div className="flex items-center justify-between p-4">
                         <div className="flex items-center gap-4">
-                            <Button variant="ghost" size="sm" className="p-2">
-                                <ArrowLeftIcon className="w-5 h-5" />
-                            </Button>
                             <div>
                                 <h1 className="font-bold text-xl">
                                     Notifications

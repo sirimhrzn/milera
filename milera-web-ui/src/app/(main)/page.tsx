@@ -2,11 +2,10 @@
 
 import Logo from "@/components/logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { TweetCard } from "./_components/TweetCard";
 import { TweetComposer } from "./_components/TweetComposer";
+import Link from "next/link";
 
 const mockTweets = [
     {
@@ -98,21 +97,28 @@ export default function Home() {
     return (
         <div className="min-h-screen bg-background">
             {/* Mobile Layout */}
-            <div className="flex flex-col h-screen">
+            <div className="flex flex-col min-h-screen">
                 {/* Header */}
                 <header className="sticky top-1 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-                    <div className="flex items-center justify-between p-5">
-                        <Avatar className="w-7 h-6 md:w-9 md:h-8">
-                            <AvatarImage src="/diverse-user-avatars.png" />
-                            <AvatarFallback>U</AvatarFallback>
-                        </Avatar>
-                        <div className="flex items-center space-x-2 text-xl md:text-3xl font-bold gap-2">
-                            <Logo className="w-9 h-8" />
-                            Milera
-                        </div>
-                        <Button variant="ghost" size="sm" className="p-3">
-                            <MoreHorizontal className="w-6 h-5" />
-                        </Button>
+                    <div className="relative flex items-center p-5">
+                        {/* Avatar on the left */}
+                        <Link href="/profile">
+                            <Avatar className="w-7 h-6 md:w-9 md:h-8 flex-shrink-0">
+                                <AvatarImage src="/diverse-user-avatars.png" />
+                                <AvatarFallback>U</AvatarFallback>
+                            </Avatar>
+                        </Link>
+
+                        {/* Logo and Milera centered absolutely */}
+                        <Link
+                            href="/"
+                            className="absolute left-1/2 -translate-x-1/2 flex items-center space-x-2 text-xl md:text-3xl font-bold"
+                        >
+                            <Logo className="w-9 h-8 flex-shrink-0" />
+                            <span className="whitespace-nowrap hidden sm:inline-block">
+                                Milera
+                            </span>
+                        </Link>
                     </div>
 
                     {/* Tab Navigation */}

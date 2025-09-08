@@ -8,6 +8,7 @@ import {
     LinkIcon,
     LocationEdit,
     MoreHorizontalIcon,
+    Settings,
     Verified,
 } from "lucide-react";
 import { useState } from "react";
@@ -82,9 +83,6 @@ export default function ProfilePage() {
                 {/* Header */}
                 <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
                     <div className="flex items-center gap-4 p-4">
-                        <Button variant="ghost" size="sm" className="p-2">
-                            <ArrowLeftIcon className="w-5 h-5" />
-                        </Button>
                         <div className="flex-1">
                             <h1 className="font-bold text-xl">
                                 {mockUser.name}
@@ -94,7 +92,7 @@ export default function ProfilePage() {
                             </p>
                         </div>
                         <Button variant="ghost" size="sm" className="p-2">
-                            <MoreHorizontalIcon className="w-5 h-5" />
+                            <Settings className="w-5 h-5" />
                         </Button>
                     </div>
                 </header>
