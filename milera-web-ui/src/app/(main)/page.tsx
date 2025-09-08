@@ -102,11 +102,11 @@ export default function Home() {
                 {/* Header */}
                 <header className="sticky top-1 z-50 bg-background/80 backdrop-blur-md border-b border-border">
                     <div className="flex items-center justify-between p-5">
-                        <Avatar className="w-9 h-8">
+                        <Avatar className="w-7 h-6 md:w-9 md:h-8">
                             <AvatarImage src="/diverse-user-avatars.png" />
                             <AvatarFallback>U</AvatarFallback>
                         </Avatar>
-                        <div className="flex items-center space-x-2 text-3xl font-bold gap-2">
+                        <div className="flex items-center space-x-2 text-xl md:text-3xl font-bold gap-2">
                             <Logo className="w-9 h-8" />
                             Milera
                         </div>

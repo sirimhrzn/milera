@@ -83,21 +83,21 @@ export function TweetComposer({
     const canPost = tweetText.trim() || uploadedImages.length > 0 || pollData;
 
     return (
-        <div className="border-b border-border p-4">
-            <div className="flex gap-3">
+        <div className="border-b border-border p-3 sm:p-4">
+            <div className="flex flex-row gap-2 sm:gap-3">
                 {/* Avatar */}
-                <Avatar className="w-10 h-10 flex-shrink-0">
+                <Avatar className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0">
                     <AvatarImage src="/diverse-user-avatars.png" />
                     <AvatarFallback>U</AvatarFallback>
                 </Avatar>
 
                 {/* Composer */}
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                     <Textarea
                         placeholder={placeholder}
                         value={tweetText}
                         onChange={(e) => setTweetText(e.target.value)}
-                        className="min-h-[80px] text-xl placeholder:text-muted-foreground border-0 resize-none focus-visible:ring-0 bg-muted"
+                        className="min-h-[60px] sm:min-h-[80px] text-base sm:text-xl placeholder:text-muted-foreground border-0 resize-none focus-visible:ring-0 bg-muted w-full"
                     />
 
                     {uploadedImages.length > 0 && (
@@ -118,8 +118,8 @@ export function TweetComposer({
                     )}
 
                     {/* Media Options */}
-                    <div className="flex items-center justify-between mt-4">
-                        <div className="flex items-center gap-4">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center justify-between mt-2 sm:mt-4 gap-2 sm:gap-0">
+                        <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
                             <input
                                 ref={fileInputRef}
                                 type="file"
@@ -131,25 +131,25 @@ export function TweetComposer({
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="p-2 text-primary hover:bg-primary/10 rounded-full"
+                                className="p-1.5 sm:p-2 text-primary hover:bg-primary/10 rounded-full"
                                 onClick={() => fileInputRef.current?.click()}
                                 disabled={uploadedImages.length >= 4}
                             >
-                                <Image className="w-5 h-5" />
+                                <Image className="w-4 h-4 sm:w-5 sm:h-5" />
                             </Button>
 
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="p-2 text-primary hover:bg-primary/10 rounded-full"
+                                className="p-1.5 sm:p-2 text-primary hover:bg-primary/10 rounded-full"
                             >
-                                <MdOutlineGifBox className="w-5 h-5" />
+                                <MdOutlineGifBox className="w-4 h-4 sm:w-5 sm:h-5" />
                             </Button>
 
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className={`p-2 rounded-full ${
+                                className={`p-1.5 sm:p-2 rounded-full ${
                                     showPoll || pollData
                                         ? "text-primary bg-primary/10"
                                         : "text-primary hover:bg-primary/10"
@@ -157,19 +157,19 @@ export function TweetComposer({
                                 onClick={() => setShowPoll(!showPoll)}
                                 disabled={uploadedImages.length > 0}
                             >
-                                <BiPoll className="w-5 h-5" />
+                                <BiPoll className="w-4 h-4 sm:w-5 sm:h-5" />
                             </Button>
 
                             <div className="relative">
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="p-2 text-primary hover:bg-primary/10 rounded-full"
+                                    className="p-1.5 sm:p-2 text-primary hover:bg-primary/10 rounded-full"
                                     onClick={() =>
                                         setShowEmojiPicker(!showEmojiPicker)
                                     }
                                 >
-                                    <Laugh className="w-5 h-5" />
+                                    <Laugh className="w-4 h-4 sm:w-5 sm:h-5" />
                                 </Button>
                                 {showEmojiPicker && (
                                     <EmojiPicker
@@ -185,32 +185,32 @@ export function TweetComposer({
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    className={`p-2 rounded-full ${
+                                    className={`p-1.5 sm:p-2 rounded-full ${
                                         scheduledDate
                                             ? "text-primary bg-primary/10"
                                             : "text-primary hover:bg-primary/10"
                                     }`}
                                     onClick={() => setShowScheduleModal(true)}
                                 >
-                                    <Calendar className="w-5 h-5" />
+                                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
                                 </Button>
                             )}
 
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="p-2 text-primary hover:bg-primary/10 rounded-full"
+                                className="p-1.5 sm:p-2 text-primary hover:bg-primary/10 rounded-full"
                             >
-                                <LocationEdit className="w-5 h-5" />
+                                <LocationEdit className="w-4 h-4 sm:w-5 sm:h-5" />
                             </Button>
                         </div>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3">
                             {/* Tweet Button */}
                             <Button
                                 onClick={handleTweet}
                                 disabled={!canPost}
-                                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 py-2 rounded-full disabled:opacity-50"
+                                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-4 sm:px-6 py-1 sm:py-2 text-sm sm:text-base rounded-full disabled:opacity-50"
                             >
                                 {isReply
                                     ? "Reply"
