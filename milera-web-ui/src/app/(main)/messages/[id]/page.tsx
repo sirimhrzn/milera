@@ -12,13 +12,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 
-interface ChatPageProps {
-    params: {
-        id: string;
-    };
-}
+type Params = Promise<{ id: string }>;
 
 const mockUser = {
     name: "Sarah Johnson",
@@ -59,7 +55,8 @@ const mockMessages = [
     },
 ];
 
-export default function ChatPage({ params }: ChatPageProps) {
+export default function ChatPage({ params }: { params: Params }) {
+    const chatId = use(params).id;
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState(mockMessages);
     const messagesEndRef = useRef<HTMLDivElement>(null);

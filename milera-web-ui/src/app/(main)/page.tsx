@@ -10,7 +10,7 @@ import { TweetComposer } from "./_components/TweetComposer";
 
 const mockTweets = [
     {
-        id: "0",
+        id: "1",
         user: {
             name: "Elon Musk",
             username: "elonmusk",
@@ -19,30 +19,32 @@ const mockTweets = [
         },
         content:
             "Just had a great conversation about the future of AI and sustainable energy. Exciting times ahead! 🚀",
-        timestamp: "1h",
-        likes: 12499,
-        retweets: 3199,
-        replies: 889,
+        timestamp: "2h",
+        likes: 12500,
+        retweets: 3200,
+        replies: 890,
+        views: 45600,
         image: "/tesla-factory.jpg",
-    },
-    {
-        id: "1",
-        user: {
-            name: "OpenAI",
-            username: "OpenAI",
-            avatar: "/abstract-geometric-logo.png",
-            verified: true,
-        },
-        content:
-            "Introducing our latest research on multimodal AI systems. This breakthrough could revolutionize how we interact with technology.",
-        timestamp: "3h",
-        likes: 8899,
-        retweets: 2099,
-        replies: 455,
     },
     {
         id: "2",
         user: {
+            name: "OpenAI",
+            username: "OpenAI",
+            avatar: "/abstract-geometric-logo.png",
+            verified: true,
+        },
+        content:
+            "Introducing our latest research on multimodal AI systems. This breakthrough could revolutionize how we interact with technology.",
+        timestamp: "4h",
+        likes: 8900,
+        retweets: 2100,
+        replies: 456,
+        views: 23400,
+    },
+    {
+        id: "3",
+        user: {
             name: "Vercel",
             username: "vercel",
             avatar: "/vercel-logo.png",
@@ -50,13 +52,14 @@ const mockTweets = [
         },
         content:
             "Ship faster with our new deployment pipeline. Zero-config, maximum performance. Try it today!",
-        timestamp: "5h",
-        likes: 5599,
-        retweets: 1199,
-        replies: 233,
+        timestamp: "6h",
+        likes: 5600,
+        retweets: 1200,
+        replies: 234,
+        views: 18900,
     },
     {
-        id: "3",
+        id: "4",
         user: {
             name: "OpenAI",
             username: "OpenAI",
@@ -65,13 +68,14 @@ const mockTweets = [
         },
         content:
             "Introducing our latest research on multimodal AI systems. This breakthrough could revolutionize how we interact with technology.",
-        timestamp: "3h",
-        likes: 8899,
-        retweets: 2099,
-        replies: 455,
+        timestamp: "4h",
+        likes: 8900,
+        retweets: 2100,
+        replies: 456,
+        views: 23400,
     },
     {
-        id: "4",
+        id: "5",
         user: {
             name: "Vercel",
             username: "vercel",
@@ -80,10 +84,11 @@ const mockTweets = [
         },
         content:
             "Ship faster with our new deployment pipeline. Zero-config, maximum performance. Try it today!",
-        timestamp: "5h",
-        likes: 5599,
-        retweets: 1199,
-        replies: 233,
+        timestamp: "6h",
+        likes: 5600,
+        retweets: 1200,
+        replies: 234,
+        views: 18900,
     },
 ];
 
@@ -101,7 +106,10 @@ export default function Home() {
                             <AvatarImage src="/diverse-user-avatars.png" />
                             <AvatarFallback>U</AvatarFallback>
                         </Avatar>
-                        <Logo className="w-9 h-8" />
+                        <div className="flex items-center space-x-2 text-3xl font-bold gap-2">
+                            <Logo className="w-9 h-8" />
+                            Milera
+                        </div>
                         <Button variant="ghost" size="sm" className="p-3">
                             <MoreHorizontal className="w-6 h-5" />
                         </Button>

@@ -25,7 +25,7 @@ export function BottomNavigation({ activeTab }: BottomNavigationProps) {
 
     return (
         <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50">
-            <div className="flex items-center justify-between py-2 px-4 lg:px-0 container mx-auto">
+            <div className="flex items-center justify-between py-2 px-4 lg:px-0 max-w-5xl mx-auto">
                 <Link href="/">
                     <Button
                         variant="ghost"

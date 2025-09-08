@@ -12,21 +12,18 @@ import {
     Verified,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { use, useState } from "react";
 import { TweetCard } from "../../_components/TweetCard";
 import { TweetComposer } from "../../_components/TweetComposer";
 
-export default function TweetDetailPage({
-    params,
-}: {
-    params: { id: string };
-}) {
-    const tweetId = params.id;
+type Params = Promise<{ id: string }>;
+
+export default function TweetDetailPage({ params }: { params: Params }) {
+    const tweetId = use(params).id;
     const [liked, setLiked] = useState(false);
     const [retweeted, setRetweeted] = useState(false);
     const [showReplyComposer, setShowReplyComposer] = useState(false);
 
-    // Mock tweet data - in real app, fetch based on tweetId
     const tweet = {
         id: tweetId,
         user: {
@@ -42,6 +39,7 @@ export default function TweetDetailPage({
         likes: 1247,
         retweets: 89,
         replies: 156,
+        views: 1200000,
         image: "/product-launch-celebration.jpg",
     };
 
@@ -59,6 +57,7 @@ export default function TweetDetailPage({
             likes: 23,
             retweets: 2,
             replies: 5,
+            views: 10,
         },
         {
             id: "reply2",
@@ -73,6 +72,7 @@ export default function TweetDetailPage({
             likes: 45,
             retweets: 8,
             replies: 2,
+            views: 10,
         },
     ];
 

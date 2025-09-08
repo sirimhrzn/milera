@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { EmojiPicker } from "@/app/(main)/_components/EmojiPicker";
 import { MediaUpload } from "@/app/(main)/_components/MediaUpload";
 import { PollCreator } from "@/app/(main)/_components/PollCreator";
@@ -9,15 +8,10 @@ import { ScheduleModal } from "@/app/(main)/_components/ScheduleModal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import {
-    Calendar,
-    Image,
-    Laugh,
-    LocationEdit,
-    Sticker,
-    Vote,
-} from "lucide-react";
+import { Calendar, Image, Laugh, LocationEdit } from "lucide-react";
 import { useRef, useState } from "react";
+import { BiPoll } from "react-icons/bi";
+import { MdOutlineGifBox } from "react-icons/md";
 
 interface TweetComposerProps {
     placeholder?: string;
@@ -39,7 +33,6 @@ export function TweetComposer({
     } | null>(null);
     const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const maxLength = 280;
 
     const handleTweet = () => {
         if (tweetText.trim() || uploadedImages.length > 0 || pollData) {
@@ -87,9 +80,7 @@ export function TweetComposer({
         setShowEmojiPicker(false);
     };
 
-    const canPost =
-        (tweetText.trim() || uploadedImages.length > 0 || pollData) &&
-        tweetText.length <= maxLength;
+    const canPost = tweetText.trim() || uploadedImages.length > 0 || pollData;
 
     return (
         <div className="border-b border-border p-4">
@@ -107,7 +98,6 @@ export function TweetComposer({
                         value={tweetText}
                         onChange={(e) => setTweetText(e.target.value)}
                         className="min-h-[80px] text-xl placeholder:text-muted-foreground border-0 resize-none focus-visible:ring-0 bg-muted"
-                        maxLength={maxLength}
                     />
 
                     {uploadedImages.length > 0 && (
@@ -153,7 +143,7 @@ export function TweetComposer({
                                 size="sm"
                                 className="p-2 text-primary hover:bg-primary/10 rounded-full"
                             >
-                                <Sticker className="w-5 h-5" />
+                                <MdOutlineGifBox className="w-5 h-5" />
                             </Button>
 
                             <Button
@@ -167,7 +157,7 @@ export function TweetComposer({
                                 onClick={() => setShowPoll(!showPoll)}
                                 disabled={uploadedImages.length > 0}
                             >
-                                <Vote className="w-5 h-5" />
+                                <BiPoll className="w-5 h-5" />
                             </Button>
 
                             <div className="relative">
@@ -216,58 +206,6 @@ export function TweetComposer({
                         </div>
 
                         <div className="flex items-center gap-3">
-                            {/* Character Count */}
-                            <div className="flex items-center gap-2">
-                                <div className="relative w-6 h-6">
-                                    <svg
-                                        className="w-6 h-6 transform -rotate-90"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <circle
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            fill="none"
-                                            className="text-muted-foreground/20"
-                                        />
-                                        <circle
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            fill="none"
-                                            strokeDasharray={`${
-                                                (tweetText.length / maxLength) *
-                                                62.83
-                                            } 62.83`}
-                                            className={
-                                                tweetText.length >
-                                                maxLength * 0.8
-                                                    ? tweetText.length >
-                                                      maxLength
-                                                        ? "text-red-500"
-                                                        : "text-yellow-500"
-                                                    : "text-primary"
-                                            }
-                                        />
-                                    </svg>
-                                </div>
-                                {tweetText.length > maxLength * 0.8 && (
-                                    <span
-                                        className={`text-sm ${
-                                            tweetText.length > maxLength
-                                                ? "text-red-500"
-                                                : "text-yellow-500"
-                                        }`}
-                                    >
-                                        {maxLength - tweetText.length}
-                                    </span>
-                                )}
-                            </div>
-
                             {/* Tweet Button */}
                             <Button
                                 onClick={handleTweet}
@@ -285,8 +223,9 @@ export function TweetComposer({
                 </div>
             </div>
 
-            {!isReply && showScheduleModal && (
+            {!isReply && (
                 <ScheduleModal
+                    open={showScheduleModal}
                     onSchedule={(date) => {
                         setScheduledDate(date);
                         setShowScheduleModal(false);

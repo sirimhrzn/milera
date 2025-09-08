@@ -3,6 +3,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
+    Bookmark,
+    ChartNoAxesColumn,
     Heart,
     MessageCircle,
     MoreHorizontal,
@@ -26,6 +28,7 @@ interface Tweet {
     likes: number;
     retweets: number;
     replies: number;
+    views: number;
     image?: string;
 }
 
@@ -130,71 +133,96 @@ export function TweetCard({ tweet }: TweetCardProps) {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center justify-between max-w-md">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="flex items-center gap-2 text-muted-foreground hover:text-primary hover:bg-primary/10 p-2 rounded-full"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <MessageCircle className="w-4 h-4" />
-                            <span className="text-sm">
-                                {formatNumber(tweet.replies)}
-                            </span>
-                        </Button>
+                    <div className="flex items-center justify-between">
+                        <div className="flex gap-6">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="flex items-center gap-2 text-muted-foreground hover:text-primary hover:bg-primary/10 p-2 rounded-full"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <MessageCircle className="w-4 h-4" />
+                                <span className="text-sm">
+                                    {formatNumber(tweet.replies)}
+                                </span>
+                            </Button>
 
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setRetweeted(!retweeted);
-                            }}
-                            className={`flex items-center gap-2 p-2 rounded-full ${
-                                retweeted
-                                    ? "text-green-500 hover:text-green-600 hover:bg-green-500/10"
-                                    : "text-muted-foreground hover:text-green-500 hover:bg-green-500/10"
-                            }`}
-                        >
-                            <Repeat className="w-4 h-4" />
-                            <span className="text-sm">
-                                {formatNumber(
-                                    tweet.retweets + (retweeted ? 1 : 0)
-                                )}
-                            </span>
-                        </Button>
-
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setLiked(!liked);
-                            }}
-                            className={`flex items-center gap-2 p-2 rounded-full ${
-                                liked
-                                    ? "text-red-500 hover:text-red-600 hover:bg-red-500/10"
-                                    : "text-muted-foreground hover:text-red-500 hover:bg-red-500/10"
-                            }`}
-                        >
-                            <Heart
-                                className={`w-4 h-4 ${
-                                    liked ? "fill-current" : ""
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setRetweeted(!retweeted);
+                                }}
+                                className={`flex items-center gap-2 p-2 rounded-full ${
+                                    retweeted
+                                        ? "text-green-500 hover:text-green-600 hover:bg-green-500/10"
+                                        : "text-muted-foreground hover:text-green-500 hover:bg-green-500/10"
                                 }`}
-                            />
-                            <span className="text-sm">
-                                {formatNumber(tweet.likes + (liked ? 1 : 0))}
-                            </span>
-                        </Button>
+                            >
+                                <Repeat className="w-4 h-4" />
+                                <span className="text-sm">
+                                    {formatNumber(
+                                        tweet.retweets + (retweeted ? 1 : 0)
+                                    )}
+                                </span>
+                            </Button>
 
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="flex items-center gap-2 text-muted-foreground hover:text-primary hover:bg-primary/10 p-2 rounded-full"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <Share className="w-4 h-4" />
-                        </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setLiked(!liked);
+                                }}
+                                className={`flex items-center gap-2 p-2 rounded-full ${
+                                    liked
+                                        ? "text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                                        : "text-muted-foreground hover:text-red-500 hover:bg-red-500/10"
+                                }`}
+                            >
+                                <Heart
+                                    className={`w-4 h-4 ${
+                                        liked ? "fill-current" : ""
+                                    }`}
+                                />
+                                <span className="text-sm">
+                                    {formatNumber(
+                                        tweet.likes + (liked ? 1 : 0)
+                                    )}
+                                </span>
+                            </Button>
+
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className={`flex items-center gap-2 p-2 rounded-full`}
+                            >
+                                <ChartNoAxesColumn className={`w-4 h-4`} />
+                                <span className="text-sm">
+                                    {formatNumber(tweet.views)}
+                                </span>
+                            </Button>
+                        </div>
+
+                        <div className="flex justify-end flex-1">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="flex items-center gap-2 text-muted-foreground hover:text-primary hover:bg-primary/10 p-2 rounded-full"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <Bookmark className="w-4 h-4" />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="flex items-center gap-2 text-muted-foreground hover:text-primary hover:bg-primary/10 p-2 rounded-full"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <Share className="w-4 h-4" />
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

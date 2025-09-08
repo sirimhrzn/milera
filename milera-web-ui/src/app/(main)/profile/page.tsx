@@ -43,6 +43,7 @@ const mockUserTweets = [
         likes: 42,
         retweets: 8,
         replies: 12,
+        views: 150,
     },
     {
         id: "2",
@@ -58,6 +59,7 @@ const mockUserTweets = [
         likes: 156,
         retweets: 23,
         replies: 34,
+        views: 980,
     },
 ];
 

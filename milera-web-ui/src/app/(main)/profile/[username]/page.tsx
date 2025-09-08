@@ -1,4 +1,4 @@
-("use client");
+"use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -10,14 +10,10 @@ import {
     MoreHorizontalIcon,
     Verified,
 } from "lucide-react";
-import { useState } from "react";
+import { use, useState } from "react";
 import { TweetCard } from "../../_components/TweetCard";
 
-interface ProfilePageProps {
-    params: {
-        username: string;
-    };
-}
+type Params = Promise<{ username: string }>;
 
 const mockUsers: Record<string, any> = {
     elonmusk: {
@@ -50,8 +46,8 @@ const mockUsers: Record<string, any> = {
     },
 };
 
-export default function UserProfilePage({ params }: ProfilePageProps) {
-    const { username } = params;
+export default function UserProfilePage({ params }: { params: Params }) {
+    const username = use(params).username;
     const [activeTab, setActiveTab] = useState("Posts");
     const [isFollowing, setIsFollowing] = useState(false);
     const tabs = ["Posts", "Replies", "Highlights", "Media", "Likes"];
@@ -85,6 +81,7 @@ export default function UserProfilePage({ params }: ProfilePageProps) {
                       likes: 12500,
                       retweets: 3200,
                       replies: 890,
+                      views: 45600,
                       image: "/tesla-factory.jpg",
                   },
               ]

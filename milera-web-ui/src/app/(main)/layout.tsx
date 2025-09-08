@@ -1,5 +1,3 @@
-"use client";
-
 import { BottomNavigation } from "./_components/BottomNavigation";
 
 export default function MainLayout({
@@ -8,7 +6,7 @@ export default function MainLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="min-h-screen flex flex-col container mx-auto">
+        <div className="min-h-screen flex flex-col max-w-5xl mx-auto">
             <main className="flex-1 pb-16">{children}</main>
             <BottomNavigation />
         </div>
