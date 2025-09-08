@@ -1,6 +1,6 @@
 use crate::api::Pagination;
 use crate::app::AppState;
-use crate::dto::User;
+use milera_common::models::User;
 use crate::error::{ErrorResponse, ServerError};
 use chrono::{DateTime, Utc};
 use milera_common::{
@@ -42,13 +42,14 @@ where
 // Retrieve unique parameters from the client and pass it over here.
 pub async fn create_user(
     state: Arc<AppState>,
-    user: &User,
+    username: &str,
+    password: &str,
     creation_token: Option<&str>,
-) -> Result<i32, ServerError> {
+) -> Result<User, ServerError> {
     let db: Arc<PgPool> = state.db.clone();
 
     if let Ok(_) =
-        check_if_exists::<String, i32>(db.as_ref(), "users", "username", "id", &user.username).await
+        check_if_exists::<String, i32>(db.as_ref(), "users", "username", "id", &username.to_string()).await
     {
         return Err(ServerError::CustomError(ErrorResponse {
             error_code: 409,
@@ -56,23 +57,26 @@ pub async fn create_user(
         }));
     };
 
-    let user_id: i32 = sqlx::query(
-        "INSERT INTO users(username,password, creation_token) VALUES($1,$2,$3) RETURNING ID",
+    let row = sqlx::query(
+        "INSERT INTO users(username,password, creation_token) VALUES($1,$2,$3) RETURNING *",
     )
-    .bind(&user.username)
-    .bind(&user.password)
+    .bind(&username)
+    .bind(&password)
     .bind(creation_token)
     .fetch_one(db.as_ref())
-    .await?
-    .get("id");
+    .await?;
 
     event!(
         Level::INFO,
         message = "User created.",
-        user = &user.username
+        user = &username
     );
 
-    Ok(user_id)
+    Ok(User{
+        id: row.get::<i32, _>("id"),
+        username: row.get::<String, _>("username"),
+        password: row.get::<String, _>("password")
+    })
 }
 
 pub async fn get_user(state: Arc<AppState>, id: i32) -> Result<User, ServerError> {
@@ -83,7 +87,7 @@ pub async fn get_user(state: Arc<AppState>, id: i32) -> Result<User, ServerError
         .unwrap();
 
     Ok(User {
-        id: row.get::<i32, _>("id") as u32,
+        id: row.get::<i32, _>("id"),
         username: row.get("username"),
         password: row.get("password"),
     })

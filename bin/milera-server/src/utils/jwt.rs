@@ -1,4 +1,4 @@
-use crate::dto::User;
+use milera_common::models::User;
 use crate::error::ServerError;
 use chrono::Local;
 use jsonwebtoken::errors::Error;
@@ -13,7 +13,7 @@ use tracing::event;
 pub struct Claims {
     pub aud: Option<String>,
     pub exp: usize,
-    pub sub: u32,
+    pub sub: i32,
 }
 
 pub fn validate_jwt(token: &str) -> Result<TokenData<Claims>, Error> {

@@ -5,8 +5,10 @@ mod dto;
 mod error;
 mod server;
 mod utils;
+mod rpc;
+mod auth;
 
-use server::start as start_http_server;
+use server::main as start_http_server;
 
 #[tokio::main]
 async fn main() {

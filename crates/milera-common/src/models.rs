@@ -41,3 +41,16 @@ pub struct Discussion {
     pub created_date: DateTime<Utc>,
     pub updated_date: DateTime<Utc>,
 }
+
+#[cfg_attr(feature = "server", derive(sqlx::FromRow))]
+#[cfg_attr(
+    feature = "wasm",
+    derive(tsify::Tsify),
+    tsify(into_wasm_abi, from_wasm_abi)
+)]
+#[derive(Debug, Serialize, Deserialize)]
+pub struct User {
+    pub id: i32,
+    pub username: String,
+    pub password: String,
+}

@@ -17,3 +17,4 @@ wasm-bindgen = "0.2.100"
 reqwest-wasm = { version = "0.11.16", features = [ "json", "blocking" ] }
 serde_json = "1.0.143"
 thiserror = "2.0.16"
+jsonrpsee = { version = "0.26.0", features = [] }

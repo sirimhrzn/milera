@@ -4,6 +4,7 @@ use axum::response::{IntoResponse, Response};
 use serde::Serialize;
 use thiserror::Error;
 use tracing::error;
+use jsonrpsee::types::ErrorObjectOwned;
 
 #[derive(Debug, Error)]
 pub enum ServerError {
@@ -51,6 +52,21 @@ pub enum ServerError {
     MissingField(String),
     #[error("Not found")]
     NotFound,
+    #[error("JsonRpsee error: {0}")]
+    JsonRpsee(String),
+}
+
+// not mine
+pub fn to_jsonrpsee_error_object(err: Option<impl ToString>, message: &str) -> ErrorObjectOwned {
+    ErrorObjectOwned::owned(
+        jsonrpsee::types::error::UNKNOWN_ERROR_CODE,
+        message,
+        err.map(|e| e.to_string()),
+    )
+}
+
+pub fn to_jsonrpsee_error<T: ToString>(message: &'static str) -> impl Fn(T) -> ErrorObjectOwned {
+    move |err: T| to_jsonrpsee_error_object(Some(err), message)
 }
 
 #[derive(Debug, Serialize, Clone)]
@@ -58,75 +74,4 @@ pub struct ErrorResponse {
     pub error_code: u32,
     #[serde(rename = "message")]
     pub reason: String,
-}
-
-impl IntoResponse for ServerError {
-    fn into_response(self) -> Response {
-        let error_response: (StatusCode, ErrorResponse) = match self {
-            ServerError::DefaultError => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                ErrorResponse {
-                    error_code: 500,
-                    reason: "Something went wrong".to_string(),
-                },
-            ),
-            ServerError::AppState(ref app_state_err) => {
-                (StatusCode::INTERNAL_SERVER_ERROR, app_state_err.clone())
-            }
-
-            ServerError::SQLxError(ref err) => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                ErrorResponse {
-                    error_code: 521,
-                    reason: format!("{}", err),
-                },
-            ),
-            ServerError::CustomError(ref err) => (StatusCode::INTERNAL_SERVER_ERROR, err.clone()),
-            ServerError::JsonWebTokenError(ref err) => (
-                StatusCode::UNAUTHORIZED,
-                ErrorResponse {
-                    error_code: 401,
-                    reason: format!("{}", err),
-                },
-            ),
-            ServerError::EntityNotFound => (
-                StatusCode::BAD_REQUEST,
-                ErrorResponse {
-                    error_code: 400,
-                    reason: "requested entity not found".to_string(),
-                },
-            ),
-            ServerError::InvalidCredential => (
-                StatusCode::BAD_REQUEST,
-                ErrorResponse {
-                    error_code: 401,
-                    reason: self.to_string(),
-                },
-            ),
-            ServerError::Unauthorized => (
-                StatusCode::UNAUTHORIZED,
-                ErrorResponse {
-                    error_code: 401,
-                    reason: self.to_string(),
-                },
-            ),
-
-            ServerError::NotFound => (
-                StatusCode::NOT_FOUND,
-                ErrorResponse {
-                    error_code: 404,
-                    reason: "Not found".to_string(),
-                },
-            ),
-            _ => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                ErrorResponse {
-                    error_code: 500,
-                    reason: "Something went wrong".to_string(),
-                },
-            ),
-        };
-        error!("{}: {}", self, &error_response.1.reason);
-        (error_response.0, Json(error_response.1)).into_response()
-    }
 }

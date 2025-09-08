@@ -9,7 +9,14 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 # wasm-bindgen-futures = "0.4.51"
 thiserror = { workspace = true }
-milera-common = { path = "../milera-common", features = ["wasm"] }
+milera-common = { path = "../milera-common", features = ["wasm", "client"] }
+jsonrpsee-wasm-client = { version = "0.26.0"}
+jsonrpsee-core = { version = "0.26.0", features = ["async-wasm-client", "wasm-bindgen-futures"] }
+jsonrpsee-client-transport = { version = "0.26.0", features = ["web"] }
+jsonrpsee-types = "0.26.0"
+js-sys = "0.3.78"
+serde-wasm-bindgen = "0.6.5"
+
 
 [target.'cfg(target_family = "wasm")'.dependencies]
 wasm-bindgen = { workspace = true }

@@ -8,7 +8,7 @@ use wasm_bindgen::prelude::*;
     derive(tsify::Tsify),
     tsify(into_wasm_abi, from_wasm_abi)
 )]
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct RegistrationResponse {
     pub message: String,
     pub access_token: String,

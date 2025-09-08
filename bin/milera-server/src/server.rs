@@ -1,45 +1,56 @@
-use crate::api::middleware::authentication;
-use crate::api::{
-    auth::router as auth_router, discussion::router as discussion_router,
-    post::router as post_router,
-};
+use std::net::SocketAddr;
+
+use jsonrpsee::core::client::ClientT;
+use jsonrpsee::http_client::HttpClient;
+use jsonrpsee::rpc_params;
+use jsonrpsee::server::{RpcModule, Server};
+use milera_common::response::RegistrationResponse;
+use milera_common::rpc::MileraApiServer;
+use tracing_subscriber::util::SubscriberInitExt;
+use std::sync::Arc;
+
 use crate::app::AppState;
 use crate::error::ServerError;
-use crate::utils::jwt::AuthenticatedUser;
+use crate::rpc::MileraServer;
 
-use axum::http::Method;
-use axum::{Router, middleware};
-use std::sync::Arc;
-use tokio::net::TcpListener;
-use tracing::info;
-use tower_http::cors::{CorsLayer, Any};
+pub async fn main() -> anyhow::Result<()> {
+	// let filter = tracing_subscriber::EnvFilter::try_from_default_env()?
+		// .add_directive("jsonrpsee[method_call{name = \"say_hello\"}]=trace".parse()?);
+	// tracing_subscriber::FmtSubscriber::builder().with_env_filter(filter).finish().try_init()?;
 
-pub async fn start() -> Result<(), ServerError> {
-    let app_state = Arc::new(AppState::new().await.unwrap());
-    let router = Router::new().nest(
-        "/api",
-        Router::new()
-            .merge(post_router(app_state.clone()))
-            .merge(discussion_router(app_state.clone()))
-            .layer(middleware::from_fn_with_state(
-                app_state.clone(),
-                authentication,
-            ))
-            .layer(axum::Extension(AuthenticatedUser::default()))
-            .merge(auth_router(app_state.clone())),
-    )
-    .layer(CorsLayer::new()
-            .allow_origin(Any)
-            .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
-            .allow_headers(Any));
+	let app = Arc::new(AppState::new().await?);
+	let server_addr = run_server(app.clone()).await?;
+	// let url = format!("http://{}", server_addr);
 
-    let host = std::env::var("HOST").expect("Expected environment variable HOST");
-    let port = std::env::var("PORT").expect("Expected environment variable PORT");
+	// let client = HttpClient::builder().build(url)?;
+	// let params = rpc_params!["siriri".to_string(), "mahasdklj".to_string()];
+	// let response: Result<RegistrationResponse, _> = client.request("registerUser", params).await;
 
-    let address = format!("{}:{}", host, port);
-    let listener = TcpListener::bind(&address).await.unwrap();
+	// match response {
+	// 	Ok(response) => println!("{}", response.access_token),
+	// 	Err(err) => tracing::error!("Error: {:?}", err),
+	// }
+	// tracing::info!("r: {:?}", response);
 
-    info!("Server listening on {}", address);
-    axum::serve(listener, router).await.unwrap();
-    Ok(())
+	Ok(())
+}
+
+async fn run_server(app: Arc<AppState>) -> anyhow::Result<SocketAddr> {
+	let server = Server::builder().build("127.0.0.1:7777".parse::<SocketAddr>()?).await?;
+	let rpc = MileraServer::new(app.clone());
+	let module = rpc.into_rpc();
+
+	println!("Available methods: {:?}", module.method_names().collect::<Vec<_>>());
+
+	let addr = server.local_addr()?;
+	let handle = server.start(module);
+
+	// In this example we don't care about doing shutdown so let's it run forever.
+	// You may use the `ServerHandle` to shut it down or manage it yourself.
+	// tokio::spawn(handle.stopped());
+
+	tokio::signal::ctrl_c().await?;
+	handle.stop()?;
+
+	Ok(addr)
 }

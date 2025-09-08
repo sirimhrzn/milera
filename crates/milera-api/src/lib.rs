@@ -1,7 +1,2 @@
-mod api;
-mod app;
-mod discussion;
-mod error;
-mod macros;
-
-pub use app::MileraConfig;
+pub mod rpc;
+mod util;
