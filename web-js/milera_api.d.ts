@@ -1,8 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-export function register_user(api: MileraApi): Promise<RegistrationResponse>;
-export type ApiError = "LibraryUninitialized" | { RequestError: { status_code: number; message: string } } | "NetworkError" | { HttpError: string } | { ParseError: string } | { JsonError: string };
-
 export interface NewDiscussion {
     title: string;
     description: string;
@@ -30,6 +27,24 @@ export interface LoginResponse {
     refresh_token: string | undefined;
 }
 
+export interface Pagination {
+    order_by: string | undefined;
+    order_field: string | undefined;
+    page: number;
+    per_page: number;
+}
+
+export interface Post {
+    id: number;
+    created_by: number;
+    anonymous: boolean;
+    discussion_id: number;
+    parent_post_id: number | undefined;
+    content: string;
+    created_at: DateTime<Utc>;
+    updated_at: DateTime<Utc>;
+}
+
 export interface Discussion {
     id: number;
     title: string;
@@ -45,50 +60,44 @@ export interface Discussion {
     updated_date: DateTime<Utc>;
 }
 
-export interface Post {
+export interface User {
     id: number;
-    created_by: number;
-    anonymous: boolean;
-    discussion_id: number;
-    parent_post_id: number | undefined;
-    content: string;
-    created_at: DateTime<Utc>;
-    updated_at: DateTime<Utc>;
+    username: string;
+    password: string;
 }
 
-export class MileraApi {
+export class MileraRpcClient {
   free(): void;
-  constructor(config: MileraConfig);
+  constructor(auth_url: string, gated_url: string);
+  get_posts(): Promise<any>;
+  get_discussions(): Promise<any>;
   register_user(username: string, password: string): Promise<RegistrationResponse>;
-  login_user(username: string, password: string): Promise<LoginResponse>;
-}
-export class MileraConfig {
-  free(): void;
-  constructor(api_url: string);
-  readonly api_url: string;
+  login_user(username: string, password: string): Promise<RegistrationResponse>;
 }
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly __wbg_mileraapi_free: (a: number, b: number) => void;
-  readonly mileraapi_new: (a: number) => number;
-  readonly mileraapi_register_user: (a: number, b: number, c: number, d: number, e: number) => any;
-  readonly mileraapi_login_user: (a: number, b: number, c: number, d: number, e: number) => any;
-  readonly register_user: (a: number) => any;
-  readonly __wbg_mileraconfig_free: (a: number, b: number) => void;
-  readonly mileraconfig_new: (a: number, b: number) => number;
-  readonly mileraconfig_api_url: (a: number) => [number, number];
+  readonly __wbg_milerarpcclient_free: (a: number, b: number) => void;
+  readonly milerarpcclient_new: (a: number, b: number, c: number, d: number) => any;
+  readonly milerarpcclient_get_posts: (a: number) => any;
+  readonly milerarpcclient_get_discussions: (a: number) => any;
+  readonly milerarpcclient_register_user: (a: number, b: number, c: number, d: number, e: number) => any;
+  readonly milerarpcclient_login_user: (a: number, b: number, c: number, d: number, e: number) => any;
+  readonly post_new: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => any;
+  readonly post_createPost: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => any;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
   readonly __wbindgen_exn_store: (a: number) => void;
   readonly __externref_table_alloc: () => number;
   readonly __wbindgen_export_4: WebAssembly.Table;
   readonly __wbindgen_export_5: WebAssembly.Table;
-  readonly __wbindgen_free: (a: number, b: number, c: number) => void;
-  readonly closure89_externref_shim: (a: number, b: number, c: any) => void;
-  readonly closure198_externref_shim: (a: number, b: number, c: any, d: any) => void;
+  readonly wasm_bindgen__convert__closures_____invoke__hee455712f4395a57: (a: number, b: number) => void;
+  readonly closure239_externref_shim: (a: number, b: number, c: any) => void;
+  readonly closure338_externref_shim: (a: number, b: number, c: any) => void;
+  readonly wasm_bindgen__convert__closures_____invoke__h1157dd7f943ccb3e: (a: number, b: number) => void;
+  readonly closure364_externref_shim: (a: number, b: number, c: any, d: any) => void;
   readonly __wbindgen_start: () => void;
 }
 

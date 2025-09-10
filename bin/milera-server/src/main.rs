@@ -1,12 +1,12 @@
-mod api;
 mod app;
 mod db;
-mod dto;
 mod error;
+mod handlers;
+mod rpc;
 mod server;
 mod utils;
 
-use server::start as start_http_server;
+use server::main as start_http_server;
 
 #[tokio::main]
 async fn main() {

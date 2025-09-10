@@ -1,10 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-pub mod auth;
-pub mod discussion;
-pub mod middleware;
-pub mod post;
+#[cfg(feature = "wasm-client")]
+use wasm_bindgen::prelude::*;
 
+#[cfg_attr(feature = "wasm-client", derive(tsify::Tsify))]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Pagination {
     pub order_by: Option<String>,

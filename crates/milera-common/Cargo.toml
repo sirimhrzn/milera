@@ -10,8 +10,10 @@ rust_decimal = { workspace = true }
 wasm-bindgen = { workspace = true, optional = true }
 tsify = { workspace = true , optional = true}
 chrono = { workspace = true }
+jsonrpsee = { workspace = true, features = ["macros"] }
+anyhow = "1.0.99"
 
 
 [features]
-wasm = [ "wasm-bindgen", "tsify" ]
-server = [ "sqlx" ]
+server = [ "sqlx" , "jsonrpsee/server"]
+wasm-client = [ "wasm-bindgen", "tsify", "jsonrpsee/async-wasm-client" ]

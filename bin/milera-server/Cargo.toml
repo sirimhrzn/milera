@@ -9,7 +9,6 @@ rust_decimal = { workspace = true }
 serde = { workspace = true }
 sqlx = { workspace = true }
 tokio = { workspace = true }
-axum = { version = "0.8.4", features = ["macros", "multipart", "ws"] }
 bcrypt = "0.17.1"
 chrono = { workspace = true }
 dashmap = "6.1.0"
@@ -21,3 +20,10 @@ tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.20", features = ["chrono", "env-filter", "json", "serde"] }
 ulid = "1.2.1"
 tower-http = { version = "0.6.6", features = ["cors"] }
+jsonrpsee = { workspace = true, features = ["server", "server-core", "macros"] }
+anyhow = "1.0.99"
+tower = "0.5.2"
+hyper = { version = "1.7.0", features = ["http1"] }
+url = "2.5.7"
+futures = "0.3.31"
+serde_qs = "0.15.0"

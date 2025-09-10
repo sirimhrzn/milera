@@ -1,8 +1,8 @@
-use crate::dto::User;
 use crate::error::ServerError;
 use chrono::Local;
 use jsonwebtoken::errors::Error;
 use jsonwebtoken::{DecodingKey, EncodingKey, Header, TokenData, Validation, decode, encode};
+use milera_common::models::User;
 use serde::{Deserialize, Serialize};
 use std::ops::Add;
 use std::time::Duration;
@@ -13,7 +13,7 @@ use tracing::event;
 pub struct Claims {
     pub aud: Option<String>,
     pub exp: usize,
-    pub sub: u32,
+    pub sub: i32,
 }
 
 pub fn validate_jwt(token: &str) -> Result<TokenData<Claims>, Error> {
@@ -54,11 +54,6 @@ pub fn generate_jwt(user: &User, exp: Option<usize>) -> Result<String, ServerErr
         token = &token
     );
     Ok(token)
-}
-
-#[derive(Deserialize, Serialize, Clone, Debug, Default)]
-pub struct AuthenticatedUser {
-    pub user_id: i32,
 }
 
 // .0 is  access token and .1 is refresh token
