@@ -69,8 +69,10 @@ export interface User {
 export class MileraRpcClient {
   free(): void;
   constructor(auth_url: string, gated_url: string);
+  get_posts(): Promise<any>;
+  get_discussions(): Promise<any>;
   register_user(username: string, password: string): Promise<RegistrationResponse>;
-  get_posts(): Promise<void>;
+  login_user(username: string, password: string): Promise<RegistrationResponse>;
 }
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
@@ -79,8 +81,10 @@ export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly __wbg_milerarpcclient_free: (a: number, b: number) => void;
   readonly milerarpcclient_new: (a: number, b: number, c: number, d: number) => any;
-  readonly milerarpcclient_register_user: (a: number, b: number, c: number, d: number, e: number) => any;
   readonly milerarpcclient_get_posts: (a: number) => any;
+  readonly milerarpcclient_get_discussions: (a: number) => any;
+  readonly milerarpcclient_register_user: (a: number, b: number, c: number, d: number, e: number) => any;
+  readonly milerarpcclient_login_user: (a: number, b: number, c: number, d: number, e: number) => any;
   readonly post_new: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => any;
   readonly post_createPost: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => any;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
@@ -89,11 +93,11 @@ export interface InitOutput {
   readonly __externref_table_alloc: () => number;
   readonly __wbindgen_export_4: WebAssembly.Table;
   readonly __wbindgen_export_5: WebAssembly.Table;
-  readonly closure120_externref_shim: (a: number, b: number, c: any) => void;
-  readonly wasm_bindgen__convert__closures_____invoke__hc3a12314497e76be: (a: number, b: number) => void;
-  readonly closure221_externref_shim: (a: number, b: number, c: any) => void;
-  readonly wasm_bindgen__convert__closures_____invoke__h9fc80833320d048f: (a: number, b: number) => void;
-  readonly closure242_externref_shim: (a: number, b: number, c: any, d: any) => void;
+  readonly wasm_bindgen__convert__closures_____invoke__hee455712f4395a57: (a: number, b: number) => void;
+  readonly closure239_externref_shim: (a: number, b: number, c: any) => void;
+  readonly closure338_externref_shim: (a: number, b: number, c: any) => void;
+  readonly wasm_bindgen__convert__closures_____invoke__h1157dd7f943ccb3e: (a: number, b: number) => void;
+  readonly closure364_externref_shim: (a: number, b: number, c: any, d: any) => void;
   readonly __wbindgen_start: () => void;
 }
 

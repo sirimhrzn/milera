@@ -9,7 +9,6 @@ rust_decimal = { workspace = true }
 serde = { workspace = true }
 sqlx = { workspace = true }
 tokio = { workspace = true }
-axum = { version = "0.8.4", features = ["macros", "multipart", "ws"] }
 bcrypt = "0.17.1"
 chrono = { workspace = true }
 dashmap = "6.1.0"

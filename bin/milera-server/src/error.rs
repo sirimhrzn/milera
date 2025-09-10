@@ -29,16 +29,6 @@ pub enum ServerError {
     EntityNotFound,
     #[error("int parse error")]
     ParseIntError(#[from] std::num::ParseIntError),
-    #[error("Form body rejected: {0}")]
-    FormRejection(#[from] axum::extract::rejection::FormRejection),
-    #[error("Json body rejected: {0}")]
-    JsonRejection(#[from] axum::extract::rejection::JsonRejection),
-    #[error("To str error: {0}")]
-    ToStrError(#[from] axum::http::header::ToStrError),
-    #[error("Axum error: {0}")]
-    AxumError(#[from] axum::Error),
-    #[error("Axum Http Error: {0}")]
-    AxumHttpError(#[from] axum::http::Error),
     #[error("Invalid credential")]
     InvalidCredential,
     #[error("Unauthorized")]
