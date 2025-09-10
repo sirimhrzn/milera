@@ -3,10 +3,10 @@ mod app;
 mod db;
 mod dto;
 mod error;
+mod handlers;
+mod rpc;
 mod server;
 mod utils;
-mod rpc;
-mod auth;
 
 use server::main as start_http_server;
 

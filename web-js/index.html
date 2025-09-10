@@ -103,7 +103,8 @@
       async function initialize() {
         try {
           await init();
-          conf = await new MileraRpcClient('http://localhost:7777');
+          const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImV4cCI6MTc1NzU5MjU2Niwic3ViIjo1fQ.K-DYh4gtI2CYqRf7s73Hue1r2h-3XVm8whYoxvQWj-0";
+          conf = await new MileraRpcClient('http://localhost:7778','ws://siri:siri@localhost:7777?token=' + token);
 
           statusEl.textContent = 'Ready to make requests';
           statusEl.className = 'status success';
@@ -128,7 +129,7 @@
           statusEl.textContent = 'Making request...';
           statusEl.className = 'status loading';
 
-          const result = await conf.register_user('sirimhrz','slasdf');
+          const result = await conf.get_posts();
 
           console.log('Response:', result);
           responseTextEl.textContent = JSON.stringify(result, null, 2);

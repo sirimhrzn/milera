@@ -1,10 +1,10 @@
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "wasm")]
+#[cfg(feature = "wasm-client")]
 use wasm_bindgen::prelude::*;
 
 #[cfg_attr(
-    feature = "wasm",
+    feature = "wasm-client",
     derive(tsify::Tsify),
     tsify(into_wasm_abi, from_wasm_abi)
 )]
@@ -15,11 +15,11 @@ pub struct RegistrationResponse {
 }
 
 #[cfg_attr(
-    feature = "wasm",
+    feature = "wasm-client",
     derive(tsify::Tsify),
     tsify(into_wasm_abi, from_wasm_abi)
 )]
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct LoginResponse {
     pub access_token: String,
     pub refresh_token: Option<String>,

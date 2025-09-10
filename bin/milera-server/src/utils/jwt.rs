@@ -1,8 +1,8 @@
-use milera_common::models::User;
 use crate::error::ServerError;
 use chrono::Local;
 use jsonwebtoken::errors::Error;
 use jsonwebtoken::{DecodingKey, EncodingKey, Header, TokenData, Validation, decode, encode};
+use milera_common::models::User;
 use serde::{Deserialize, Serialize};
 use std::ops::Add;
 use std::time::Duration;
@@ -54,11 +54,6 @@ pub fn generate_jwt(user: &User, exp: Option<usize>) -> Result<String, ServerErr
         token = &token
     );
     Ok(token)
-}
-
-#[derive(Deserialize, Serialize, Clone, Debug, Default)]
-pub struct AuthenticatedUser {
-    pub user_id: i32,
 }
 
 // .0 is  access token and .1 is refresh token

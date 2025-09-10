@@ -21,5 +21,10 @@ tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.20", features = ["chrono", "env-filter", "json", "serde"] }
 ulid = "1.2.1"
 tower-http = { version = "0.6.6", features = ["cors"] }
-jsonrpsee = { workspace = true, features = ["server", "client"] }
+jsonrpsee = { workspace = true, features = ["server", "server-core", "macros"] }
 anyhow = "1.0.99"
+tower = "0.5.2"
+hyper = { version = "1.7.0", features = ["http1"] }
+url = "2.5.7"
+futures = "0.3.31"
+serde_qs = "0.15.0"

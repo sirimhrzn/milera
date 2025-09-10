@@ -5,25 +5,24 @@ edition = "2024"
 
 [dependencies]
 serde = { workspace = true }
-# ehttp = { workspace = true, features = ["json", "multipart"] }
 serde_json = { workspace = true }
-# wasm-bindgen-futures = "0.4.51"
 thiserror = { workspace = true }
-milera-common = { path = "../milera-common", features = ["wasm", "client"] }
-jsonrpsee-wasm-client = { version = "0.26.0"}
-jsonrpsee-core = { version = "0.26.0", features = ["async-wasm-client", "wasm-bindgen-futures"] }
-jsonrpsee-client-transport = { version = "0.26.0", features = ["web"] }
-jsonrpsee-types = "0.26.0"
-js-sys = "0.3.78"
-serde-wasm-bindgen = "0.6.5"
+milera-common = { path = "../milera-common", features = ["wasm-client"] }
+http = "1.3.1"
+url = "2.5.7"
 
-
-[target.'cfg(target_family = "wasm")'.dependencies]
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+jsonrpsee-types = { workspace = true }
+jsonrpsee-wasm-client = { workspace = true }
+serde-wasm-bindgen = { workspace = true }
 wasm-bindgen = { workspace = true }
-wasm-bindgen-futures = "0.4.1"
-# wasm-bindgen-futures =
-reqwest-wasm = { workspace = true , features = ["json", "blocking"]}
+wasm-bindgen-futures = { workspace = true }
+jsonrpsee-core = { workspace = true, features = ["async-wasm-client", "wasm-bindgen-futures", "http-helpers"] }
+jsonrpsee = { workspace = true, features = ["wasm-client"] }
 tsify = { workspace = true }
+js-sys = { workspace = true }
+jsonrpsee-client-transport = { workspace = true, features = ["web"] }
+
 
 [lib]
 crate-type = ["cdylib", "staticlib", "lib"]

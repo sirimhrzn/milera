@@ -214,24 +214,24 @@ function debugString(val) {
     // TODO we could test for more things here, like `Set`s and `Map`s.
     return className;
 }
-function __wbg_adapter_28(arg0, arg1) {
-    wasm.wasm_bindgen__convert__closures_____invoke__hee455712f4395a57(arg0, arg1);
+function __wbg_adapter_28(arg0, arg1, arg2) {
+    wasm.closure120_externref_shim(arg0, arg1, arg2);
 }
 
-function __wbg_adapter_31(arg0, arg1, arg2) {
-    wasm.closure104_externref_shim(arg0, arg1, arg2);
+function __wbg_adapter_31(arg0, arg1) {
+    wasm.wasm_bindgen__convert__closures_____invoke__hc3a12314497e76be(arg0, arg1);
 }
 
 function __wbg_adapter_38(arg0, arg1, arg2) {
-    wasm.closure182_externref_shim(arg0, arg1, arg2);
+    wasm.closure221_externref_shim(arg0, arg1, arg2);
 }
 
 function __wbg_adapter_41(arg0, arg1) {
-    wasm.wasm_bindgen__convert__closures_____invoke__h1157dd7f943ccb3e(arg0, arg1);
+    wasm.wasm_bindgen__convert__closures_____invoke__h9fc80833320d048f(arg0, arg1);
 }
 
-function __wbg_adapter_112(arg0, arg1, arg2, arg3) {
-    wasm.closure267_externref_shim(arg0, arg1, arg2, arg3);
+function __wbg_adapter_119(arg0, arg1, arg2, arg3) {
+    wasm.closure242_externref_shim(arg0, arg1, arg2, arg3);
 }
 
 const __wbindgen_enum_BinaryType = ["blob", "arraybuffer"];
@@ -262,12 +262,15 @@ export class MileraRpcClient {
         wasm.__wbg_milerarpcclient_free(ptr, 0);
     }
     /**
-     * @param {string} url
+     * @param {string} auth_url
+     * @param {string} gated_url
      */
-    constructor(url) {
-        const ptr0 = passStringToWasm0(url, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    constructor(auth_url, gated_url) {
+        const ptr0 = passStringToWasm0(auth_url, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        const ret = wasm.milerarpcclient_new(ptr0, len0);
+        const ptr1 = passStringToWasm0(gated_url, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len1 = WASM_VECTOR_LEN;
+        const ret = wasm.milerarpcclient_new(ptr0, len0, ptr1, len1);
         return ret;
     }
     /**
@@ -281,6 +284,62 @@ export class MileraRpcClient {
         const ptr1 = passStringToWasm0(password, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len1 = WASM_VECTOR_LEN;
         const ret = wasm.milerarpcclient_register_user(this.__wbg_ptr, ptr0, len0, ptr1, len1);
+        return ret;
+    }
+    /**
+     * @returns {Promise<void>}
+     */
+    get_posts() {
+        const ret = wasm.milerarpcclient_get_posts(this.__wbg_ptr);
+        return ret;
+    }
+}
+
+const PostFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_post_free(ptr >>> 0, 1));
+
+export class Post {
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        PostFinalization.unregister(this);
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_post_free(ptr, 0);
+    }
+    /**
+     * @param {number} id
+     * @param {number} created_by
+     * @param {boolean} anonymous
+     * @param {number} discussion_id
+     * @param {number} parent_post_id
+     * @param {string} content
+     * @returns {Post}
+     */
+    static new(id, created_by, anonymous, discussion_id, parent_post_id, content) {
+        const ptr0 = passStringToWasm0(content, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.post_new(id, created_by, anonymous, discussion_id, parent_post_id, ptr0, len0);
+        return ret;
+    }
+    /**
+     * @param {number} id
+     * @param {number} created_by
+     * @param {boolean} anonymous
+     * @param {number} discussion_id
+     * @param {number} parent_post_id
+     * @param {string} content
+     * @returns {Post}
+     */
+    static createPost(id, created_by, anonymous, discussion_id, parent_post_id, content) {
+        const ptr0 = passStringToWasm0(content, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.post_createPost(id, created_by, anonymous, discussion_id, parent_post_id, ptr0, len0);
         return ret;
     }
 }
@@ -367,6 +426,10 @@ function __wbg_get_imports() {
         const ret = arg0.dispatchEvent(arg1);
         return ret;
     }, arguments) };
+    imports.wbg.__wbg_getTime_2afe67905d873e92 = function(arg0) {
+        const ret = arg0.getTime();
+        return ret;
+    };
     imports.wbg.__wbg_instanceof_ArrayBuffer_a8b6f580b363f2bc = function(arg0) {
         let result;
         try {
@@ -403,6 +466,10 @@ function __wbg_get_imports() {
         const ret = arg0.name;
         return ret;
     };
+    imports.wbg.__wbg_new0_97314565408dea38 = function() {
+        const ret = new Date();
+        return ret;
+    };
     imports.wbg.__wbg_new_07b483f72211fd66 = function() {
         const ret = new Object();
         return ret;
@@ -414,7 +481,7 @@ function __wbg_get_imports() {
                 const a = state0.a;
                 state0.a = 0;
                 try {
-                    return __wbg_adapter_112(a, state0.b, arg0, arg1);
+                    return __wbg_adapter_119(a, state0.b, arg0, arg1);
                 } finally {
                     state0.a = a;
                 }
@@ -531,28 +598,28 @@ function __wbg_get_imports() {
         const ret = false;
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper310 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 101, __wbg_adapter_28);
+    imports.wbg.__wbindgen_closure_wrapper1013 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 220, __wbg_adapter_38);
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper312 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 101, __wbg_adapter_31);
+    imports.wbg.__wbindgen_closure_wrapper1038 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 231, __wbg_adapter_41);
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper314 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 101, __wbg_adapter_31);
+    imports.wbg.__wbindgen_closure_wrapper367 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 119, __wbg_adapter_28);
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper316 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 101, __wbg_adapter_31);
+    imports.wbg.__wbindgen_closure_wrapper369 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 119, __wbg_adapter_31);
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper952 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 181, __wbg_adapter_38);
+    imports.wbg.__wbindgen_closure_wrapper371 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 119, __wbg_adapter_28);
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper977 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 192, __wbg_adapter_41);
+    imports.wbg.__wbindgen_closure_wrapper373 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 119, __wbg_adapter_28);
         return ret;
     };
     imports.wbg.__wbindgen_debug_string = function(arg0, arg1) {

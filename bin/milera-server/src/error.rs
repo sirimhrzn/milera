@@ -1,10 +1,7 @@
-use axum::Json;
-use axum::http::StatusCode;
-use axum::response::{IntoResponse, Response};
+use jsonrpsee::types::ErrorObjectOwned;
 use serde::Serialize;
 use thiserror::Error;
 use tracing::error;
-use jsonrpsee::types::ErrorObjectOwned;
 
 #[derive(Debug, Error)]
 pub enum ServerError {

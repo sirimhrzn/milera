@@ -1,11 +1,11 @@
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "wasm")]
+#[cfg(feature = "wasm-client")]
 use wasm_bindgen::prelude::*;
 
 #[cfg_attr(
-    feature = "wasm",
+    feature = "wasm-client",
     derive(tsify::Tsify),
     tsify(into_wasm_abi, from_wasm_abi)
 )]
@@ -21,7 +21,7 @@ pub struct NewDiscussion {
 }
 
 #[cfg_attr(
-    feature = "wasm",
+    feature = "wasm-client",
     derive(tsify::Tsify),
     tsify(into_wasm_abi, from_wasm_abi)
 )]
