@@ -1,4 +1,5 @@
-use crate::request::NewPost;
+use crate::models::Discussion;
+use crate::request::{NewDiscussion, NewPost};
 use crate::response::RegistrationResponse;
 use crate::utils::Pagination;
 use crate::{models::Post, response::LoginResponse};
@@ -21,6 +22,12 @@ pub trait MileraGated {
 
     #[method(name = "deletePost", with_extensions)]
     async fn delete_post(&self, post_id: i32) -> RpcResult<()>;
+
+    #[method(name = "createDiscussion", with_extensions)]
+    async fn create_discussion(&self, discussion: NewDiscussion) -> RpcResult<Discussion>;
+
+    #[method(name = "getDiscussions", with_extensions)]
+    async fn get_discussions(&self, pagination: Pagination) -> RpcResult<Vec<Discussion>>;
 }
 
 #[cfg_attr(feature = "server", rpc(server))]

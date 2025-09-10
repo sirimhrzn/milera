@@ -10,6 +10,7 @@ thiserror = { workspace = true }
 milera-common = { path = "../milera-common", features = ["wasm-client"] }
 http = "1.3.1"
 url = "2.5.7"
+reqwest-wasm = { workspace = true, features = ["json"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 jsonrpsee-types = { workspace = true }

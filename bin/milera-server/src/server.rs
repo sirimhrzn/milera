@@ -1,12 +1,13 @@
 use crate::app::AppState;
 use crate::rpc::{MileraAuthServer, MileraRpcServer};
 use crate::utils::jwt::validate_jwt;
-use jsonrpsee::core::middleware::{Batch, BatchEntry, BatchEntryErr, Notification, ResponseFuture, RpcServiceBuilder, RpcServiceT};
+use jsonrpsee::core::middleware::{
+    Batch, BatchEntry, BatchEntryErr, Notification, ResponseFuture, RpcServiceBuilder, RpcServiceT,
+};
 use jsonrpsee::server::{Server, ServerHandle};
 use jsonrpsee::types::{ErrorObject, Request};
 use jsonrpsee::{Extensions, MethodResponse};
 use milera_common::rpc::MileraAuthenticationServer;
-use tracing_subscriber::registry::ExtensionsMut;
 use std::sync::Arc;
 
 use jsonrpsee::core::http_helpers::{Request as HttpRequest, Response as HttpResponse};
@@ -127,7 +128,6 @@ where
     }
 
     fn call(&mut self, mut req: HttpRequest) -> Self::Future {
-
         let query_params: std::collections::HashMap<String, String> = req
             .uri()
             .query()
@@ -145,73 +145,79 @@ where
     }
 }
 
-
 #[derive(Clone)]
 pub struct Authorizer<S> {
-	service: S
+    service: S,
 }
 
 impl<S> Authorizer<S> {
-
     fn new(service: S) -> Self {
-		Self {
-			service,
-		}
-	}
-	// Currently, the http middleware checks the query param for `token` then
-	// inserts the `AuthenticatedUser` extension. The RPC middleware authorized
-	// based on it's existence. We shall move to closing the connection on multiple failures or even a single.
-	fn authenticate(&self, ext: &Extensions) -> bool {
-		ext.get::<AuthenticatedUser>().is_some()
-	}
+        Self { service }
+    }
+    // Currently, the http middleware checks the query param for `token` then
+    // inserts the `AuthenticatedUser` extension. The RPC middleware authorized
+    // based on it's existence. We shall move to closing the connection on multiple failures or even a single.
+    fn authenticate(&self, ext: &Extensions) -> bool {
+        ext.get::<AuthenticatedUser>().is_some()
+    }
 }
 
-impl<S>RpcServiceT for Authorizer<S>
+impl<S> RpcServiceT for Authorizer<S>
 where
-	S: RpcServiceT<
-			MethodResponse = MethodResponse,
-			BatchResponse = MethodResponse,
-			NotificationResponse = MethodResponse,
-		> + Send
-		+ Sync
-		+ Clone
-		+ 'static,
+    S: RpcServiceT<
+            MethodResponse = MethodResponse,
+            BatchResponse = MethodResponse,
+            NotificationResponse = MethodResponse,
+        > + Send
+        + Sync
+        + Clone
+        + 'static,
 {
-	type MethodResponse = S::MethodResponse;
-	type NotificationResponse = S::NotificationResponse;
-	type BatchResponse = S::BatchResponse;
+    type MethodResponse = S::MethodResponse;
+    type NotificationResponse = S::NotificationResponse;
+    type BatchResponse = S::BatchResponse;
 
-	fn call<'a>(&self, req: Request<'a>) -> impl Future<Output = Self::MethodResponse> + Send + 'a {
-	    if !self.authenticate(&req.extensions) {
-	        ResponseFuture::ready(MethodResponse::error(req.id, ErrorObject::borrowed(-32000, "Unauthorized", None)))
-	    } else {
-	        ResponseFuture::future(self.service.call(req))
-	    }
-	}
+    fn call<'a>(&self, req: Request<'a>) -> impl Future<Output = Self::MethodResponse> + Send + 'a {
+        if !self.authenticate(&req.extensions) {
+            ResponseFuture::ready(MethodResponse::error(
+                req.id,
+                ErrorObject::borrowed(-32000, "Unauthorized", None),
+            ))
+        } else {
+            ResponseFuture::future(self.service.call(req))
+        }
+    }
 
-	fn batch<'a>(&self, mut batch: Batch<'a>) -> impl Future<Output = Self::BatchResponse> + Send + 'a {
+    fn batch<'a>(
+        &self,
+        mut batch: Batch<'a>,
+    ) -> impl Future<Output = Self::BatchResponse> + Send + 'a {
+        if !self.authenticate(&batch.extensions()) {
+            //XXX
+            for entry in batch.iter_mut() {
+                let id = match entry {
+                    Ok(BatchEntry::Call(req)) => req.id.clone(),
+                    Ok(BatchEntry::Notification(_)) => continue,
+                    Err(_) => continue,
+                };
+                *entry = Err(BatchEntryErr::new(
+                    id,
+                    ErrorObject::borrowed(-32000, "Unauthorized", None),
+                ));
+            }
+        }
 
-	if !self.authenticate(&batch.extensions()) {
-	        //XXX
-		    for entry in batch.iter_mut() {
-					let id = match entry {
-						Ok(BatchEntry::Call(req)) => req.id.clone(),
-						Ok(BatchEntry::Notification(_)) => continue,
-						Err(_) => continue,
-					};
-					*entry = Err(BatchEntryErr::new(id, ErrorObject::borrowed(-32000, "Unauthorized", None)));
-				}
+        self.service.batch(batch)
+    }
 
-	}
-
-		self.service.batch(batch)
-	}
-
-	fn notification<'a>(&self, n: Notification<'a>) -> impl Future<Output = Self::NotificationResponse> + Send + 'a {
-		if !self.authenticate(&n.extensions) {
-			ResponseFuture::ready(MethodResponse::notification())
-		} else {
-			ResponseFuture::future(self.service.notification(n))
-		}
-	}
+    fn notification<'a>(
+        &self,
+        n: Notification<'a>,
+    ) -> impl Future<Output = Self::NotificationResponse> + Send + 'a {
+        if !self.authenticate(&n.extensions) {
+            ResponseFuture::ready(MethodResponse::notification())
+        } else {
+            ResponseFuture::future(self.service.notification(n))
+        }
+    }
 }

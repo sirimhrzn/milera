@@ -1,7 +1,5 @@
-mod api;
 mod app;
 mod db;
-mod dto;
 mod error;
 mod handlers;
 mod rpc;
