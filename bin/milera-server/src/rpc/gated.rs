@@ -27,9 +27,15 @@ impl MileraServer {
 #[async_trait]
 impl MileraGatedServer for MileraServer {
     async fn get_posts(&self, ext: &Extensions, pagination: Pagination) -> RpcResult<Vec<Post>> {
+
+        let auth_user = ext
+            .get::<AuthenticatedUser>()
+            .ok_or(ServerError::Unauthorized)
+            .map_err(to_jsonrpsee_error("Failed to get authenticated user"))?;
+
         post::get_posts(
             self.app_state.clone(),
-            AuthenticatedUser { user_id: 123 },
+            &auth_user,
             Some(pagination),
         )
         .await

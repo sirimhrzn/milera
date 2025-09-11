@@ -16,7 +16,17 @@ pub struct Pagination {
     pub per_page: u32,
 }
 
+
+#[cfg_attr(
+    feature = "wasm-client",
+    wasm_bindgen
+)]
 impl Pagination {
+
+    #[cfg_attr(
+        feature = "wasm-client",
+        wasm_bindgen
+    )]
     pub fn new(page: u32, per_page: u32) -> Self {
         Self {
             order_by: None,

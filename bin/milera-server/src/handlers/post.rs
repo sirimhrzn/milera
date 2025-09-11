@@ -21,7 +21,7 @@ pub async fn create_post(
 
 pub async fn get_posts(
     state: Arc<AppState>,
-    user: AuthenticatedUser,
+    user: &AuthenticatedUser,
     pagination: Option<Pagination>,
 ) -> Result<Vec<Post>, ServerError> {
     let posts = find_all::<Post, i32>(

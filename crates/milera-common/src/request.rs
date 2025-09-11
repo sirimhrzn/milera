@@ -32,3 +32,21 @@ pub struct NewPost {
     pub content: String,
     pub anonymous: bool,
 }
+
+#[cfg_attr(feature = "wasm-client", wasm_bindgen)]
+impl NewPost {
+    #[cfg_attr(feature = "wasm-client", wasm_bindgen)]
+    pub fn new(
+        discussion_id: i32,
+        parent_post_id: Option<i32>,
+        content: String,
+        anonymous: bool,
+    ) -> Self {
+        Self {
+            discussion_id,
+            parent_post_id,
+            content,
+            anonymous,
+        }
+    }
+}
