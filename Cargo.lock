@@ -1609,6 +1609,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "chrono",
+ "js-sys",
  "jsonrpsee",
  "rust_decimal",
  "serde",

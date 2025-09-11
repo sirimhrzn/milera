@@ -1,5 +1,37 @@
 /* tslint:disable */
 /* eslint-disable */
+export interface Post {
+    id: number;
+    created_by: number;
+    anonymous: boolean;
+    discussion_id: number;
+    parent_post_id: number | undefined;
+    content: string;
+    created_at: DateTime<Utc>;
+    updated_at: DateTime<Utc>;
+}
+
+export interface Discussion {
+    id: number;
+    title: string;
+    description: string;
+    location: string | undefined;
+    lon: Decimal | undefined;
+    lat: Decimal | undefined;
+    location_detail: string | undefined;
+    total_post_count: number;
+    anonymous: boolean;
+    created_by: number;
+    created_date: DateTime<Utc>;
+    updated_date: DateTime<Utc>;
+}
+
+export interface User {
+    id: number;
+    username: string;
+    password: string;
+}
+
 export interface NewDiscussion {
     title: string;
     description: string;
@@ -34,45 +66,20 @@ export interface Pagination {
     per_page: number;
 }
 
-export interface Post {
-    id: number;
-    created_by: number;
-    anonymous: boolean;
-    discussion_id: number;
-    parent_post_id: number | undefined;
-    content: string;
-    created_at: DateTime<Utc>;
-    updated_at: DateTime<Utc>;
+export class MileraAuthClient {
+  free(): void;
+  constructor(auth: string);
+  register_user(username: string, password: string): Promise<RegistrationResponse>;
+  login_user(username: string, password: string): Promise<LoginResponse>;
 }
-
-export interface Discussion {
-    id: number;
-    title: string;
-    description: string;
-    location: string | undefined;
-    lon: Decimal | undefined;
-    lat: Decimal | undefined;
-    location_detail: string | undefined;
-    total_post_count: number;
-    anonymous: boolean;
-    created_by: number;
-    created_date: DateTime<Utc>;
-    updated_date: DateTime<Utc>;
-}
-
-export interface User {
-    id: number;
-    username: string;
-    password: string;
-}
-
 export class MileraRpcClient {
   free(): void;
-  constructor(auth_url: string, gated_url: string);
-  get_posts(): Promise<any>;
-  get_discussions(): Promise<any>;
-  register_user(username: string, password: string): Promise<RegistrationResponse>;
-  login_user(username: string, password: string): Promise<RegistrationResponse>;
+  constructor(gated_url: string);
+  create_post(post: NewPost): Promise<any>;
+  get_posts(pagination: Pagination): Promise<any>;
+  create_discussion(discussion: NewDiscussion): Promise<any>;
+  get_discussions(pagination: Pagination): Promise<any>;
+  delete_post(id: number): Promise<any>;
 }
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
@@ -80,11 +87,16 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly __wbg_milerarpcclient_free: (a: number, b: number) => void;
-  readonly milerarpcclient_new: (a: number, b: number, c: number, d: number) => any;
-  readonly milerarpcclient_get_posts: (a: number) => any;
-  readonly milerarpcclient_get_discussions: (a: number) => any;
-  readonly milerarpcclient_register_user: (a: number, b: number, c: number, d: number, e: number) => any;
-  readonly milerarpcclient_login_user: (a: number, b: number, c: number, d: number, e: number) => any;
+  readonly milerarpcclient_new: (a: number, b: number) => any;
+  readonly milerarpcclient_create_post: (a: number, b: any) => any;
+  readonly milerarpcclient_get_posts: (a: number, b: any) => any;
+  readonly milerarpcclient_create_discussion: (a: number, b: any) => any;
+  readonly milerarpcclient_get_discussions: (a: number, b: any) => any;
+  readonly milerarpcclient_delete_post: (a: number, b: number) => any;
+  readonly __wbg_mileraauthclient_free: (a: number, b: number) => void;
+  readonly mileraauthclient_new: (a: number, b: number) => any;
+  readonly mileraauthclient_register_user: (a: number, b: number, c: number, d: number, e: number) => any;
+  readonly mileraauthclient_login_user: (a: number, b: number, c: number, d: number, e: number) => any;
   readonly post_new: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => any;
   readonly post_createPost: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => any;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
@@ -94,10 +106,10 @@ export interface InitOutput {
   readonly __wbindgen_export_4: WebAssembly.Table;
   readonly __wbindgen_export_5: WebAssembly.Table;
   readonly wasm_bindgen__convert__closures_____invoke__hee455712f4395a57: (a: number, b: number) => void;
-  readonly closure239_externref_shim: (a: number, b: number, c: any) => void;
-  readonly closure338_externref_shim: (a: number, b: number, c: any) => void;
+  readonly closure269_externref_shim: (a: number, b: number, c: any) => void;
+  readonly closure368_externref_shim: (a: number, b: number, c: any) => void;
   readonly wasm_bindgen__convert__closures_____invoke__h1157dd7f943ccb3e: (a: number, b: number) => void;
-  readonly closure364_externref_shim: (a: number, b: number, c: any, d: any) => void;
+  readonly closure394_externref_shim: (a: number, b: number, c: any, d: any) => void;
   readonly __wbindgen_start: () => void;
 }
 

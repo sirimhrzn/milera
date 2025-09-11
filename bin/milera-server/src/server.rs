@@ -1,6 +1,7 @@
 use crate::app::AppState;
 use crate::rpc::{MileraAuthServer, MileraRpcServer};
 use crate::utils::jwt::validate_jwt;
+use hyper::header::HeaderValue;
 use jsonrpsee::core::middleware::{
     Batch, BatchEntry, BatchEntryErr, Notification, ResponseFuture, RpcServiceBuilder, RpcServiceT,
 };
@@ -8,6 +9,7 @@ use jsonrpsee::server::{Server, ServerHandle};
 use jsonrpsee::types::{ErrorObject, Request};
 use jsonrpsee::{Extensions, MethodResponse};
 use milera_common::rpc::MileraAuthenticationServer;
+use tower_http::cors::{Any, CorsLayer};
 use std::sync::Arc;
 
 use jsonrpsee::core::http_helpers::{Request as HttpRequest, Response as HttpResponse};
@@ -55,7 +57,15 @@ async fn run_server(app: Arc<AppState>) -> anyhow::Result<()> {
 }
 
 async fn start_auth_service(app: Arc<AppState>) -> anyhow::Result<ServerHandle> {
-    let server = Server::builder().build("0.0.0.0:7778").await?;
+    let cors = CorsLayer::new()
+        .allow_origin(Any)                    // Allow any origin
+        .allow_methods(Any)                   // Allow any HTTP method
+        .allow_headers(Any)                   // Allow any headers
+        .expose_headers(Any);
+    let svc = tower::ServiceBuilder::new().layer(cors);
+    let server = Server::builder()
+        .set_http_middleware(svc)
+        .build("0.0.0.0:7778").await?;
 
     let rpc = MileraAuthServer::new(app.clone());
     let module = rpc.into_rpc();

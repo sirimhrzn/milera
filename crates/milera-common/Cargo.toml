@@ -12,8 +12,8 @@ tsify = { workspace = true , optional = true}
 chrono = { workspace = true }
 jsonrpsee = { workspace = true, features = ["macros"] }
 anyhow = "1.0.99"
-
+js-sys = { workspace = true, optional = true }
 
 [features]
 server = [ "sqlx" , "jsonrpsee/server"]
-wasm-client = [ "wasm-bindgen", "tsify", "jsonrpsee/async-wasm-client" ]
+wasm-client = [ "wasm-bindgen", "tsify", "jsonrpsee/async-wasm-client", "js-sys" ]

@@ -3,74 +3,6 @@
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
     <title>Milera API Interface</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        max-width: 600px;
-        margin: 50px auto;
-        padding: 20px;
-      }
-
-      .container {
-        text-align: center;
-      }
-
-      button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        font-size: 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        margin: 10px;
-      }
-
-      button:hover {
-        background-color: #0056b3;
-      }
-
-      button:disabled {
-        background-color: #6c757d;
-        cursor: not-allowed;
-      }
-
-      .status {
-        margin: 20px 0;
-        padding: 10px;
-        border-radius: 4px;
-        font-weight: bold;
-      }
-
-      .status.loading {
-        background-color: #fff3cd;
-        color: #856404;
-      }
-
-      .status.success {
-        background-color: #d4edda;
-        color: #155724;
-      }
-
-      .status.error {
-        background-color: #f8d7da;
-        color: #721c24;
-      }
-
-      .response {
-        margin-top: 20px;
-        padding: 15px;
-        background-color: #f8f9fa;
-        border-radius: 4px;
-        border-left: 4px solid #007bff;
-        text-align: left;
-      }
-
-      pre {
-        white-space: pre-wrap;
-        word-wrap: break-word;
-      }
-    </style>
   </head>
   <body>
     <div class="container">
@@ -92,7 +24,7 @@
     <script type="module">
       // Use ES module import syntax to import functionality from the module
       // that we have compiled.
-      import init, { MileraRpcClient } from './milera_api.js';
+      import init, { MileraRpcClient, MileraAuthClient } from './milera_api.js';
 
       let conf = null;
       const statusEl = document.getElementById('status');
@@ -103,8 +35,10 @@
       async function initialize() {
         try {
           await init();
-          const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImV4cCI6MTc1NzU5MjU2Niwic3ViIjo1fQ.K-DYh4gtI2CYqRf7s73Hue1r2h-3XVm8whYoxvQWj-0";
-          conf = await new MileraRpcClient('http://localhost:7778','ws://siri:siri@localhost:7777?token=' + token);
+          const authClient = await new MileraAuthClient('http://localhost:7778');
+          let response = await authClient.login_user('sirimhrzn','siri');
+          console.log(response);
+          //conf = await new MileraRpcClient('http://localhost:7778','ws://siri:siri@localhost:7777?token=' + token);
 
           statusEl.textContent = 'Ready to make requests';
           statusEl.className = 'status success';

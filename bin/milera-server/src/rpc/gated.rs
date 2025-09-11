@@ -1,15 +1,15 @@
 use crate::error::ServerError;
-use crate::{app::AppState, error::to_jsonrpsee_error, handlers::{discussion,post}};
+use crate::{
+    app::AppState,
+    error::to_jsonrpsee_error,
+    handlers::{discussion, post},
+};
 use jsonrpsee::core::{RpcResult, async_trait};
 use jsonrpsee::server::Extensions;
 use milera_common::models::Post;
 use milera_common::{
-    models::Discussion,
-    request::NewDiscussion,
-    request::NewPost,
-    rpc::AuthenticatedUser,
-    rpc::MileraGatedServer,
-    utils::Pagination,
+    models::Discussion, request::NewDiscussion, request::NewPost, rpc::AuthenticatedUser,
+    rpc::MileraGatedServer, utils::Pagination,
 };
 use std::sync::Arc;
 
@@ -56,7 +56,11 @@ impl MileraGatedServer for MileraServer {
             .map_err(to_jsonrpsee_error("Failed to create post"))
     }
 
-    async fn create_discussion(&self, ext: &Extensions, discussion: NewDiscussion) -> RpcResult<Discussion> {
+    async fn create_discussion(
+        &self,
+        ext: &Extensions,
+        discussion: NewDiscussion,
+    ) -> RpcResult<Discussion> {
         let auth_user = ext
             .get::<AuthenticatedUser>()
             .ok_or(ServerError::Unauthorized)
@@ -66,7 +70,11 @@ impl MileraGatedServer for MileraServer {
             .map_err(to_jsonrpsee_error("Failed to create discussion"))
     }
 
-    async fn get_discussions(&self, ext: &Extensions, pagination: Pagination) -> RpcResult<Vec<Discussion>> {
+    async fn get_discussions(
+        &self,
+        ext: &Extensions,
+        pagination: Pagination,
+    ) -> RpcResult<Vec<Discussion>> {
         let auth_user = ext
             .get::<AuthenticatedUser>()
             .ok_or(ServerError::Unauthorized)

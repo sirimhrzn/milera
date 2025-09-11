@@ -12,7 +12,7 @@ pub struct AuthenticatedUser {
 }
 
 #[cfg_attr(feature = "server", rpc(server))]
-#[cfg_attr(feature = "wasm-client", rpc(client))]
+#[cfg_attr(feature = "wasm-client", rpc(client), wasm_bindgen)]
 pub trait MileraGated {
     #[method(name = "getPosts", with_extensions)]
     async fn get_posts(&self, pagination: Pagination) -> RpcResult<Vec<Post>>;

@@ -1,10 +1,15 @@
 use crate::util::to_jsonrpsee_error;
 
-use crate::http_post;
+use crate::{http_post, invoke_wasm_rpc};
 use jsonrpsee_core::client::ClientT;
 use jsonrpsee_core::{ClientError, rpc_params};
+
 use milera_common::models::{Discussion, Post};
-use milera_common::response::RegistrationResponse;
+use milera_common::request::{NewDiscussion, NewPost};
+use milera_common::response::{LoginResponse, RegistrationResponse};
+use milera_common::rpc::MileraAuthenticationClient;
+use milera_common::rpc::MileraGatedClient;
+use milera_common::utils::Pagination;
 use serde::Serialize;
 
 #[cfg(target_arch = "wasm32")]
@@ -17,65 +22,70 @@ use {
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 pub struct MileraRpcClient {
-    auth_url: String,
     gated: Client,
 }
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 impl MileraRpcClient {
+
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen(constructor))]
-    pub async fn new(auth_url: &str, gated_url: &str) -> MileraRpcClient {
+    pub async fn new(gated_url: &str) -> MileraRpcClient {
         let (sender, receiver) = web::connect(gated_url)
             .await
             .map_err(to_jsonrpsee_error("failed to connect"))
             .unwrap();
 
         let gated_client = Client::builder().build_with_wasm(sender, receiver);
+        gated_client.login_user("aksdjf", "lkajsdfkl").await;
 
         Self {
-            auth_url: auth_url.to_string(),
             gated: gated_client,
         }
     }
-
-    async fn make_request<T>(
-        &self,
-        method: &str,
-        params: jsonrpsee_core::params::ArrayParams,
-    ) -> Result<T, ClientError>
-    where
-        T: Serialize + for<'de> serde::Deserialize<'de>,
-    {
-        let response: T = self.gated.request(method, params).await?;
-        Ok(response)
-    }
 }
-
+// Make a proc macro for this.
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 impl MileraRpcClient {
+
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
-    pub async fn get_posts(&self) -> Result<JsValue, JsValue> {
-        let response = self
-            .make_request::<Vec<Post>>("getPosts", rpc_params![])
-            .await
-            .map_err(to_jsonrpsee_error("Failed to get posts."))
-            .map_err(|e| serde_wasm_bindgen::to_value(&e).unwrap())?;
-        Ok(serde_wasm_bindgen::to_value(&response).unwrap())
+    pub async fn create_post(&self, post: NewPost) -> Result<JsValue, JsValue> {
+        invoke_wasm_rpc!(self.gated.create_post(post).await)
     }
 
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
-    pub async fn get_discussions(&self) -> Result<JsValue, JsValue> {
-        let response = self
-            .make_request::<Vec<Discussion>>("getPosts", rpc_params![])
-            .await
-            .map_err(to_jsonrpsee_error("Failed to get posts."))
-            .map_err(|e| serde_wasm_bindgen::to_value(&e).unwrap())?;
-        Ok(serde_wasm_bindgen::to_value(&response).unwrap())
+    pub async fn get_posts(&self, pagination: Pagination) -> Result<JsValue, JsValue> {
+        invoke_wasm_rpc!(self.gated.get_posts(pagination).await)
     }
+
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
+    pub async fn create_discussion(&self, discussion: NewDiscussion) -> Result<JsValue, JsValue> {
+        invoke_wasm_rpc!(self.gated.create_discussion(discussion).await)
+    }
+
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
+    pub async fn get_discussions(&self, pagination: Pagination) -> Result<JsValue, JsValue> {
+        invoke_wasm_rpc!(self.gated.get_discussions(pagination).await)
+    }
+
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
+    pub async fn delete_post(&self, id: i32) -> Result<JsValue, JsValue> {
+        invoke_wasm_rpc!(self.gated.delete_post(id).await)
+    }
+
 }
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
-impl MileraRpcClient {
+pub struct MileraAuthClient {
+    auth_url: String,
+}
+
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
+impl MileraAuthClient {
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen(constructor))]
+    pub async fn new(auth: String) -> MileraAuthClient {
+        Self { auth_url: auth }
+    }
+
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
     pub async fn register_user(
         &self,
@@ -83,14 +93,15 @@ impl MileraRpcClient {
         password: &str,
     ) -> Result<RegistrationResponse, JsValue> {
         http_post!(
-            format!("{}r", &self.auth_url),
+            format!("{}", &self.auth_url),
             &serde_json::json!({
                 "jsonrpc": "2.0",
                 "method": "registerUser",
                 "params": {
                   "username": username,
                   "password": password
-                }
+                },
+                "id": 1
             }),
             RegistrationResponse
         )
@@ -101,18 +112,22 @@ impl MileraRpcClient {
         &self,
         username: &str,
         password: &str,
-    ) -> Result<RegistrationResponse, JsValue> {
-        http_post!(
-            format!("{}r", &self.auth_url),
+    ) -> Result<LoginResponse, JsValue> {
+        let response = http_post!(
+            format!("{}", &self.auth_url),
             &serde_json::json!({
                 "jsonrpc": "2.0",
                 "method": "loginUser",
                 "params": {
                   "username": username,
                   "password": password
-                }
+                },
+                "id": 1
             }),
-            RegistrationResponse
-        )
+            LoginResponse
+        );
+        dbg!(&response);
+        response
     }
+
 }

@@ -3,7 +3,11 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "wasm-client")]
 use wasm_bindgen::prelude::*;
 
-#[cfg_attr(feature = "wasm-client", derive(tsify::Tsify))]
+#[cfg_attr(
+    feature = "wasm-client",
+    derive(tsify::Tsify),
+    tsify(into_wasm_abi, from_wasm_abi)
+)]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Pagination {
     pub order_by: Option<String>,
