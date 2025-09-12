@@ -4,8 +4,9 @@ import "./App.css";
 import AuthLayout from "./layouts/AuthLayout";
 import { Login } from "./pages/(auth)/Login";
 import { SignUp } from "./pages/(auth)/SignUp";
-import Home from "./pages/Home";
+
 import { useAuthStore } from "./store/AuthStore";
+import { Home } from "./pages/Home";
 
 function App() {
     const { initializeFromCookies } = useAuthStore();

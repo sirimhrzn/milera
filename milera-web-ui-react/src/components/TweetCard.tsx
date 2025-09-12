@@ -179,7 +179,7 @@ export function TweetCard({
                     url: `${window.location.origin}/tweet/${tweet.id}`,
                 });
             } catch (err) {
-                console.log("Share cancelled");
+                console.log("Share cancelled",err);
             }
         } else {
             const tweetUrl = `${window.location.origin}/tweet/${tweet.id}`;
@@ -187,7 +187,7 @@ export function TweetCard({
                 await navigator.clipboard.writeText(tweetUrl);
                 console.log("Link copied to clipboard");
             } catch (err) {
-                console.error("Failed to copy link");
+                console.error("Failed to copy link", err);
             }
         }
 
