@@ -174,89 +174,83 @@ export default function Notifications() {
     const unreadCount = notifications.filter((n) => !n.read).length;
 
     return (
-        <div className="min-h-screen bg-background">
-            <div className="flex flex-col h-screen">
-                {/* Header */}
-                <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-                    <div className="flex items-center justify-between p-4">
-                        <div className="flex items-center gap-4">
-                            <div>
-                                <h1 className="font-bold text-xl">
-                                    Notifications
-                                </h1>
-                                {unreadCount > 0 && (
-                                    <p className="text-sm text-muted-foreground">
-                                        {unreadCount} new notifications
-                                    </p>
-                                )}
-                            </div>
+        <div className="flex flex-col">
+            {/* Header */}
+            <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+                <div className="flex items-center justify-between p-4">
+                    <div className="flex items-center gap-4">
+                        <div>
+                            <h1 className="font-bold text-xl">Notifications</h1>
+                            {unreadCount > 0 && (
+                                <p className="text-sm text-muted-foreground">
+                                    {unreadCount} new notifications
+                                </p>
+                            )}
                         </div>
-                        <Button variant="ghost" size="sm" className="p-2">
-                            <SettingsIcon className="w-5 h-5" />
-                        </Button>
                     </div>
+                    <Button variant="ghost" size="sm" className="p-2">
+                        <SettingsIcon className="w-5 h-5" />
+                    </Button>
+                </div>
 
-                    {/* Tab Navigation */}
-                    <div className="flex border-b border-border">
-                        {tabs.map((tab) => (
-                            <button
-                                key={tab}
-                                onClick={() => setActiveTab(tab)}
-                                className={`flex-1 py-4 text-sm font-medium transition-colors relative ${
-                                    activeTab === tab
-                                        ? "text-foreground"
-                                        : "text-muted-foreground hover:text-foreground"
-                                }`}
-                            >
-                                {tab}
-                                {activeTab === tab && (
-                                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-primary rounded-full" />
-                                )}
-                            </button>
+                {/* Tab Navigation */}
+                <div className="flex border-b border-border">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={`flex-1 py-4 text-sm font-medium transition-colors relative ${
+                                activeTab === tab
+                                    ? "text-foreground"
+                                    : "text-muted-foreground hover:text-foreground"
+                            }`}
+                        >
+                            {tab}
+                            {activeTab === tab && (
+                                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-primary rounded-full" />
+                            )}
+                        </button>
+                    ))}
+                </div>
+            </header>
+
+            {/* Mark All Read Button */}
+            {unreadCount > 0 && (
+                <div className="p-4 border-b border-border">
+                    <Button
+                        variant="outline"
+                        onClick={markAllAsRead}
+                        className="w-full bg-transparent"
+                    >
+                        Mark all as read
+                    </Button>
+                </div>
+            )}
+
+            {/* Main Content */}
+            <main className="flex-1">
+                {filteredNotifications.length > 0 ? (
+                    <div className="divide-y divide-border">
+                        {filteredNotifications.map((notification) => (
+                            <NotificationCard
+                                key={notification.id}
+                                notification={notification}
+                                onMarkAsRead={() => markAsRead(notification.id)}
+                            />
                         ))}
                     </div>
-                </header>
-
-                {/* Mark All Read Button */}
-                {unreadCount > 0 && (
-                    <div className="p-4 border-b border-border">
-                        <Button
-                            variant="outline"
-                            onClick={markAllAsRead}
-                            className="w-full bg-transparent"
-                        >
-                            Mark all as read
-                        </Button>
+                ) : (
+                    <div className="p-8 text-center">
+                        <h3 className="font-bold text-xl mb-2">
+                            No notifications yet
+                        </h3>
+                        <p className="text-muted-foreground">
+                            When someone interacts with your posts, you'll see
+                            it here.
+                        </p>
                     </div>
                 )}
-
-                {/* Main Content */}
-                <main className="flex-1">
-                    {filteredNotifications.length > 0 ? (
-                        <div className="divide-y divide-border">
-                            {filteredNotifications.map((notification) => (
-                                <NotificationCard
-                                    key={notification.id}
-                                    notification={notification}
-                                    onMarkAsRead={() =>
-                                        markAsRead(notification.id)
-                                    }
-                                />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="p-8 text-center">
-                            <h3 className="font-bold text-xl mb-2">
-                                No notifications yet
-                            </h3>
-                            <p className="text-muted-foreground">
-                                When someone interacts with your posts, you'll
-                                see it here.
-                            </p>
-                        </div>
-                    )}
-                </main>
-            </div>
+            </main>
         </div>
     );
 }
