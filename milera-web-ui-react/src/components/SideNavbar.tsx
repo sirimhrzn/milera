@@ -18,7 +18,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import Logo from "./logo";
 
-export function Sidebar() {
+export function SideNavbar() {
     const location = useLocation();
 
     const navigationItems = [
@@ -72,12 +72,12 @@ export function Sidebar() {
                         </span>
                     </Link>
                 </div>
-                <nav className="flex-1 flex flex-col space-y-2">
+                <nav className="flex-1 flex flex-col space-y-1">
                     {navigationItems.map((item) => (
                         <Link key={item.label} to={item.path}>
                             <div
                                 className={cn(
-                                    "flex items-center w-full p-2 md:p-4 rounded-full transition-colors duration-200",
+                                    "flex items-center w-full px-2 py-1 md:px-4 md:py-3 rounded-full transition-colors duration-200",
                                     isActive(item.path)
                                         ? "text-black font-semibold"
                                         : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/50"
@@ -92,7 +92,7 @@ export function Sidebar() {
                 <div className="mt-auto mb-4">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <div className="flex items-center justify-between p-4 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors">
+                            <div className="flex items-center justify-between p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors">
                                 <div className="flex items-center space-x-3">
                                     <div className="w-10 h-10 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
                                         <User className="h-5 w-5" />
