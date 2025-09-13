@@ -121,7 +121,7 @@ export function TweetCard({
             return;
         }
         // Simulate navigation - in real app, use Next.js router
-        window.location.href = `/tweet/${tweet.id}`;
+        window.location.href = `/post/${tweet.id}`;
     };
 
     const handleLike = (e: React.MouseEvent) => {
@@ -179,7 +179,7 @@ export function TweetCard({
                     url: `${window.location.origin}/tweet/${tweet.id}`,
                 });
             } catch (err) {
-                console.log("Share cancelled",err);
+                console.log("Share cancelled", err);
             }
         } else {
             const tweetUrl = `${window.location.origin}/tweet/${tweet.id}`;

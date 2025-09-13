@@ -81,7 +81,7 @@ const mockTweets = [
     },
 ];
 
-export default function SearchPage() {
+export default function Explore() {
     const [searchQuery, setSearchQuery] = useState("");
     const [activeTab, setActiveTab] = useState("Top");
     const [searchResults, setSearchResults] = useState<
