@@ -1,7 +1,8 @@
-import { LivestreamChat } from "@/components/LiveStreamChat";
+import { Chat } from "@/components/Chat";
 import { TweetCard } from "@/components/TweetCard";
 import { getDiscussionBySlug, getPostsByDiscussion } from "@/lib/data";
 import { formatTime } from "@/lib/utils";
+import { ArrowLeft, Bookmark, Flag, MoreHorizontal, Share } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -75,59 +76,14 @@ export default function DiscussionDetails() {
             {/* Left discussion contents */}
             <div className="flex-1 w-[600px] border-r border-border">
                 <div className="sticky top-0 bg-background/80 backdrop-blur-md border-b border-border p-4">
-                    <div className="flex items-center space-x-2">
-                        <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-                            />
-                        </svg>
-                        <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684z"
-                            />
-                        </svg>
-                        <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 105.367-2.684 1 1 0 00-5.367 2.684z"
-                            />
-                        </svg>
-                        <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                            />
-                        </svg>
+                    <div className="flex items-center justify-between">
+                        <ArrowLeft className="size-5" />
+                        <div className="flex items-center gap-6">
+                            <Bookmark className="size-5" />
+                            <Flag className="size-5" />
+                            <Share className="size-5" />
+                            <MoreHorizontal className="size-5" />
+                        </div>
                     </div>
                 </div>
 
@@ -140,11 +96,6 @@ export default function DiscussionDetails() {
                     </p>
                     <p className="text-muted-foreground leading-relaxed mb-4">
                         {discussion?.description}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                        This story is a summary of posts on Milera and may
-                        evolve over time. Milera can make mistakes, verify its
-                        outputs.
                     </p>
                 </div>
 
@@ -195,7 +146,7 @@ export default function DiscussionDetails() {
             </div>
 
             {/* Right live chat */}
-            <LivestreamChat discussionId={discussion?.id} />
+            <Chat discussionId={discussion?.id} />
         </div>
     );
 }

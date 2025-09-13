@@ -1,11 +1,10 @@
 import { getChatMessagesByDiscussion } from "@/lib/data";
 import type { ChatMessage } from "@/lib/type";
 import type React from "react";
-
 import { useState, useRef, useEffect } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 
-interface LivestreamChatProps {
+interface ChatProps {
     discussionId: string | undefined;
 }
 
@@ -35,7 +34,7 @@ function InitialAvatar({
     );
 }
 
-export function LivestreamChat({ discussionId }: LivestreamChatProps) {
+export function Chat({ discussionId }: ChatProps) {
     const [messages, setMessages] = useState<ChatMessage[]>(() => {
         return getChatMessagesByDiscussion(discussionId);
     });
